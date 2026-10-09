@@ -224,7 +224,7 @@ function render(){
       elm.textContent=`🗳️ ${Math.round(to*e).toLocaleString()} मत खस्यो`;
       if(p<1)requestAnimationFrame(f);})(t0);})();
   $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
-  $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?'अग्रता: '+(pg.full[0]?pg.full[0].name:'—'):'मतगणना बाँकी'}`;
+  $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?`अग्रता: ${pg.full[0]?pg.full[0].name:'—'} (+${((pg.full[0]?(votes[pg.full[0].id]||0):0)-(pg.full[1]?(votes[pg.full[1].id]||0):0)).toLocaleString()})`:'मतगणना बाँकी'}`;
   const listEl=$('list');
   if(c.cands.length<=2&&pg.totalPages===1){
     listEl.classList.add('duel');
@@ -244,6 +244,7 @@ function render(){
     const mx=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
     const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
     const prev=lastOrder[pg.catIdx]||[];
+    const lv=pg.full[0]?(votes[pg.full[0].id]||0):0, sv=pg.full[1]?(votes[pg.full[1].id]||0):0, mg=lv-sv;
     listEl.innerHTML=pg.list.map((x,i)=>{
       const v=votes[x.id]||0,pct=Math.round(v/mx*100),r=rankOf(x.id);
       const lead=total>0&&r<=pg.seats, won=!!x.unopposed;
@@ -256,7 +257,7 @@ function render(){
       const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
         :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b><br><span>भोट • ${pct}%</span></div>`;
       return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
-      <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+      <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?(r===1?`<span class="winTag">👑 अग्रता +${mg.toLocaleString()}</span>`:'<span class="winTag">★ Leading</span>'):''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
       ${vt}<div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
     }).join('');
   }
