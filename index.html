@@ -44,6 +44,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .pill.seat{background:#e7f8ee;color:#0a6a35;border:3px solid #0a7a3d}
 .pill.cand{background:#eef2ff;color:#1e2f8f;border:3px solid #1e2f8f}
 .pill.vote{background:#fff1f1;color:#b3121a;border:3px solid #d21f26;animation:pulse 2s infinite}
+.pill.cast{background:#fff8e1;color:#92400e;border:3px solid #f5b301}
 /* LIST */
 #list{flex:1;margin:12px 48px 0;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;min-height:0}
 .row{background:#fff;border-radius:18px;display:flex;align-items:center;gap:20px;padding:10px 24px 10px 12px;box-shadow:0 4px 14px rgba(10,20,60,.12);border:4px solid transparent;position:relative;overflow:hidden;animation:rowIn .55s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
@@ -109,6 +110,7 @@ body.obs #bottom .hideobs{display:none!important}
     <span class="pill seat" id="seatPill">—</span>
     <span class="pill cand" id="candPill">—</span>
     <span class="pill vote" id="votePill">—</span>
+    <span class="pill cast" id="castPill">—</span>
   </div>
   <div id="list"></div>
   <div id="ticker"><span id="tickTxt">🌳 नेपाली कांग्रेस १५औं महाधिवेशन •</span></div>
@@ -199,6 +201,13 @@ function render(){
   $('candPill').textContent=c.cands.length+' उम्मेदवार';
   const total=c.cands.reduce((a,x)=>a+(votes[x.id]||0),0);
   $('votePill').textContent='जम्मा '+total.toLocaleString()+' भोट';
+  // grand total cast counter — ticks up live on every slide
+  (function(){
+    const elm=$('castPill'),to=VOTES_CAST,t0=performance.now(),d=1400;
+    (function f(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);
+      elm.textContent=`🗳️ ${Math.round(to*e).toLocaleString()} मत खस्यो`;
+      if(p<1)requestAnimationFrame(f);})(t0);
+  })();
   $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
   $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?'अग्रता: '+(pg.full[0]?pg.full[0].name:'—'):'मतगणना बाँकी'}`;
   const max=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
