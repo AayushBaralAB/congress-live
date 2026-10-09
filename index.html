@@ -48,6 +48,16 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .row.lead .vt b{color:#0a6a35}
 .row .vt span{font-size:24px;color:#66739a;font-weight:700}
 .winTag{font-size:22px;font-weight:800;background:#fef3c7;color:#92400e;border:2px solid #f5b301;border-radius:999px;padding:2px 16px;margin-left:12px;vertical-align:middle}
+/* WINNER (निर्विरोध) — golden victory card */
+.row.won{border-color:#f5b301;background:linear-gradient(90deg,#fffbe6,#fff7d6,#fff);box-shadow:0 0 28px rgba(245,179,1,.55)}
+.row.won .rank{background:linear-gradient(135deg,#f5b301,#ff8a00);font-size:44px}
+.row.won .vt b{color:#b45309}
+.winTag.big{font-size:30px;background:linear-gradient(90deg,#f5b301,#ffd34d);color:#5a3c00;border:3px solid #b45309;box-shadow:0 0 14px rgba(245,179,1,.7);animation:glow 1.2s infinite alternate}
+@keyframes glow{from{box-shadow:0 0 8px rgba(245,179,1,.5)}to{box-shadow:0 0 22px rgba(245,179,1,.95)}}
+/* flower shower */
+#petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:200}
+.petal{position:absolute;top:-90px;animation-name:petalFall;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes petalFall{to{transform:translateY(1200px) rotate(540deg)}}
 /* BOTTOM */
 #bottom{height:96px;margin:0 48px 22px;background:#0b1530;border-radius:20px;display:flex;align-items:center;gap:18px;padding:0 28px;color:#fff}
 #prog{flex:1;height:16px;background:#2a3a6e;border-radius:99px;overflow:hidden}
@@ -85,6 +95,7 @@ body.obs #bottom .hideobs{display:none!important}
     <button id="nextBtn" class="hideobs">▶</button>
     <a href="admin.html" target="_blank" class="hideobs" style="color:#f5b301;font-size:22px;font-weight:800;text-decoration:none">⚙ Admin</a>
   </div>
+  <div id="petals"></div>
 </div></div>
 
 <script>
@@ -128,7 +139,7 @@ function render(){
   if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
   const pg=pages[pi],c=cats[pg.catIdx];
   $('catSel').value=pg.catIdx;
-  $('catTitle').textContent=(pg.catIdx+1)+'. '+pg.cat;
+  $('catTitle').textContent=(pg.catIdx+1)+'. '+pg.cat+(c.cands.some(x=>x.unopposed)?' 🏆':'');
   $('seatPill').textContent=pg.seats+' पद';
   $('candPill').textContent=c.cands.length+' उम्मेदवार';
   const total=c.cands.reduce((a,x)=>a+(votes[x.id]||0),0);
@@ -141,12 +152,36 @@ function render(){
   $('list').innerHTML=pg.list.map(x=>{
     const v=votes[x.id]||0,pct=Math.round(v/max*100),r=rankOf(x.id);
     const lead=total>0&&r<=pg.seats;
+    const won=!!x.unopposed;
     const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${(x.name||'?').trim().charAt(0)}</div>'">`:`<div class="av">${(x.name||'?').trim().charAt(0)}</div>`;
-    return `<div class="row ${lead?'lead':''}"><div class="rank">${r}</div>${ph}
-    <div class="nm"><b>${x.ballot}. ${x.name}${lead?'<span class="winTag">★ Leading</span>':''}${x.unopposed?'<span class="winTag" style="background:#dcfce7;color:#166534;border-color:#86efac">निर्विरोध</span>':''}</b></div>
-    <div class="vt"><b>${v.toLocaleString()}</b><br><span>भोट • ${pct}%</span></div>
-    <div class="bar"><i style="width:${pct}%"></i></div></div>`;
+    const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
+      :`<div class="vt"><b>${v.toLocaleString()}</b><br><span>भोट • ${pct}%</span></div>`;
+    return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}"><div class="rank">${won?'🏆':r}</div>${ph}
+    <div class="nm"><b>${x.ballot}. ${x.name}${(lead&&!won)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+    ${vt}
+    <div class="bar"><i style="width:${won?100:pct}%"></i></div></div>`;
   }).join('');
+  // flower shower for निर्विरोध winners
+  if(pg.list.some(x=>x.unopposed))startPetals();else stopPetals();
+}
+// ---- flower shower ----
+let petalTimer=null;
+function stopPetals(){if(petalTimer){clearInterval(petalTimer);petalTimer=null;}const b=$('petals');if(b)b.innerHTML='';}
+function startPetals(){
+  stopPetals();
+  const box=$('petals');if(!box)return;
+  const flowers=['🌸','🌺','🌼','🌷','💮','🏵️','🌹','🌻'];
+  petalTimer=setInterval(()=>{
+    const s=document.createElement('span');
+    s.className='petal';
+    s.textContent=flowers[Math.floor(Math.random()*flowers.length)];
+    s.style.left=(Math.random()*1850)+'px';
+    s.style.fontSize=(28+Math.random()*40)+'px';
+    s.style.animationDuration=(4+Math.random()*3.5)+'s';
+    box.appendChild(s);
+    setTimeout(()=>s.remove(),8000);
+    if(box.children.length>90)box.firstChild.remove();
+  },220);
 }
 let el=0;
 setInterval(()=>{if(!playing)return;el+=0.2;$('progBar').style.width=Math.min(100,el/intervalSec*100)+'%';if(el>=intervalSec){el=0;pi++;render();}},200);
