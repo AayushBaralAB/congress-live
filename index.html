@@ -11,73 +11,98 @@
 html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanagari',sans-serif;overflow:hidden}
 /* outside wrapper centers 16:9 stage */
 #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
-#stage{width:1920px;height:1080px;flex-shrink:0;transform-origin:center center;background:linear-gradient(180deg,#0b1e5b 0%,#122c8a 30%,#f2f4f9 30.2%);color:#16213a;display:flex;flex-direction:column;position:relative}
+#stage{width:1920px;height:1080px;flex-shrink:0;transform-origin:center center;background:linear-gradient(180deg,#0b1e5b 0%,#122c8a 28%,#eef1f7 28.2%);color:#16213a;display:flex;flex-direction:column;position:relative;overflow:hidden}
+/* ambient FX layer */
+#fx{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(130px);opacity:.45}
+.blob.b1{width:760px;height:760px;left:-180px;top:-220px;background:#2b4bd8;animation:drift1 14s ease-in-out infinite alternate}
+.blob.b2{width:680px;height:680px;right:-160px;top:-180px;background:#0a7a3d;animation:drift2 18s ease-in-out infinite alternate}
+.blob.b3{width:500px;height:500px;left:35%;top:-300px;background:#f5b301;opacity:.22;animation:drift1 20s ease-in-out infinite alternate-reverse}
+@keyframes drift1{to{transform:translate(120px,60px) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-120px,80px) scale(1.08)}}
+.sp{position:absolute;border-radius:50%;animation:floatUp linear infinite}
+@keyframes floatUp{from{transform:translateY(250px);opacity:0}10%{opacity:.8}to{transform:translateY(-1150px);opacity:0}}
+#top,#catbar,#list,#ticker,#bottom{position:relative;z-index:1}
 /* TOP BAR */
-#top{height:150px;display:flex;align-items:center;gap:20px;padding:22px 48px;color:#fff}
-#logo{width:96px;height:96px;background:#fff;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:58px}
-#top h1{font-size:52px;font-weight:800;line-height:1.05}
-#top p{font-size:23px;opacity:.92;font-weight:600}
+#top{height:150px;display:flex;align-items:center;gap:20px;padding:18px 48px;color:#fff}
+#logo{width:84px;height:84px;background:#fff;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:52px;flex-shrink:0;box-shadow:0 0 24px rgba(245,179,1,.45);animation:logoGlow 2.4s ease-in-out infinite alternate}
+@keyframes logoGlow{to{box-shadow:0 0 40px rgba(245,179,1,.8)}}
+#top h1{font-size:48px;font-weight:800;line-height:1.05}
+#top p{font-size:22px;opacity:.92;font-weight:600}
 #liveBox{margin-left:auto;text-align:right}
-#liveBadge{background:#d21f26;color:#fff;font-weight:800;font-size:34px;padding:8px 30px;border-radius:999px;display:inline-flex;align-items:center;gap:12px}
-#liveBadge i{width:20px;height:20px;background:#fff;border-radius:50%;animation:blink 1s infinite}
+#liveBadge{background:#d21f26;color:#fff;font-weight:800;font-size:32px;padding:8px 28px;border-radius:999px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 0 18px rgba(210,31,38,.7);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+#liveBadge i{width:18px;height:18px;background:#fff;border-radius:50%;display:inline-block;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.2}}
-#slideNo{font-size:28px;font-weight:700;margin-top:8px;opacity:.95}
+#slideNo{font-size:26px;font-weight:700;margin-top:6px;opacity:.95}
+#clock{font-size:22px;font-weight:800;color:#ffe9a8;font-variant-numeric:tabular-nums}
 /* CATEGORY BAR */
-#catbar{margin:18px 48px 0;background:#fff;border-radius:24px;border-left:16px solid #d21f26;padding:20px 34px;display:flex;align-items:center;gap:24px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
-#catbar h2{font-size:48px;font-weight:800;color:#102a7a;line-height:1.15;flex:1}
-.pill{font-size:26px;font-weight:800;padding:10px 26px;border-radius:999px;white-space:nowrap}
+#catbar{margin:12px 48px 0;background:rgba(255,255,255,.97);border-radius:22px;border-left:14px solid #d21f26;padding:14px 28px;display:flex;align-items:center;gap:22px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+#catbar h2{font-size:40px;font-weight:800;color:#102a7a;line-height:1.15;flex:1;animation:titleIn .5s ease both}
+@keyframes titleIn{from{opacity:0;transform:translateX(-40px)}}
+.pill{font-size:22px;font-weight:800;padding:8px 22px;border-radius:999px;white-space:nowrap}
 .pill.seat{background:#e7f8ee;color:#0a6a35;border:3px solid #0a7a3d}
 .pill.cand{background:#eef2ff;color:#1e2f8f;border:3px solid #1e2f8f}
-.pill.vote{background:#fff1f1;color:#b3121a;border:3px solid #d21f26}
+.pill.vote{background:#fff1f1;color:#b3121a;border:3px solid #d21f26;animation:pulse 2s infinite}
 /* LIST */
-#list{flex:1;margin:18px 48px;display:flex;flex-direction:column;gap:14px;justify-content:flex-start}
-.row{background:#fff;border-radius:20px;display:flex;align-items:center;gap:22px;padding:12px 26px 12px 14px;box-shadow:0 4px 14px rgba(10,20,60,.12);border:4px solid transparent;position:relative;overflow:hidden}
+#list{flex:1;margin:12px 48px 0;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;min-height:0}
+.row{background:#fff;border-radius:18px;display:flex;align-items:center;gap:20px;padding:10px 24px 10px 12px;box-shadow:0 4px 14px rgba(10,20,60,.12);border:4px solid transparent;position:relative;overflow:hidden;animation:rowIn .55s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
+@keyframes rowIn{from{opacity:0;transform:translateX(90px) scale(.97)}}
 .row.lead{border-color:#0a7a3d;background:linear-gradient(90deg,#f0fdf4,#fff)}
-.row .rank{min-width:78px;height:78px;border-radius:50%;background:#102a7a;color:#fff;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.row .rank{min-width:68px;height:68px;border-radius:50%;background:#102a7a;color:#fff;font-size:34px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .row.lead .rank{background:#0a7a3d}
-.row img,.row .av{width:92px;height:92px;border-radius:18px;object-fit:cover;background:#dbe3f5;flex-shrink:0}
-.row .av{display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:800;color:#fff;background:linear-gradient(135deg,#102a7a,#0a7a3d)}
+.row img,.row .av{width:78px;height:78px;border-radius:15px;object-fit:cover;background:#dbe3f5;flex-shrink:0}
+.row .av{display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#fff;background:linear-gradient(135deg,#102a7a,#0a7a3d)}
 .row .nm{flex:1;min-width:0}
-.row .nm b{font-size:38px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .nm span{font-size:24px;color:#66739a;font-weight:600}
-.row .bar{position:absolute;left:0;bottom:0;height:10px;background:#e7ecf6;width:100%}
-.row .bar i{display:block;height:100%;background:#3b82f6}
-.row.lead .bar i{background:#22c55e}
-.row .vt{text-align:right;min-width:230px}
-.row .vt b{font-size:56px;font-weight:800;color:#102a7a;line-height:1}
+.row .nm b{font-size:32px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv{font-size:22px;font-weight:800;margin-left:10px}
+.mv.up{color:#0a7a3d}.mv.dn{color:#d21f26}.mv.same{color:#98a2c3}
+.row .bar{position:absolute;left:0;bottom:0;height:9px;background:#e7ecf6;width:100%}
+.row .bar i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,#3b82f6,#60a5fa);animation:barGrow 1.1s ease both}
+.row.lead .bar i{background:linear-gradient(90deg,#0a7a3d,#22c55e)}
+@keyframes barGrow{from{width:0}}
+.row .vt{text-align:right;min-width:210px}
+.row .vt b{font-size:46px;font-weight:800;color:#102a7a;line-height:1;font-variant-numeric:tabular-nums}
 .row.lead .vt b{color:#0a6a35}
-.row .vt span{font-size:24px;color:#66739a;font-weight:700}
-.winTag{font-size:22px;font-weight:800;background:#fef3c7;color:#92400e;border:2px solid #f5b301;border-radius:999px;padding:2px 16px;margin-left:12px;vertical-align:middle}
+.row .vt span{font-size:20px;color:#66739a;font-weight:700}
+.winTag{font-size:20px;font-weight:800;background:#fef3c7;color:#92400e;border:2px solid #f5b301;border-radius:999px;padding:2px 14px;margin-left:12px;vertical-align:middle;white-space:nowrap}
 /* WINNER (निर्विरोध) — golden victory card */
 .row.won{border-color:#f5b301;background:linear-gradient(90deg,#fffbe6,#fff7d6,#fff);box-shadow:0 0 28px rgba(245,179,1,.55)}
-.row.won .rank{background:linear-gradient(135deg,#f5b301,#ff8a00);font-size:44px}
+.row.won::after{content:'';position:absolute;top:0;bottom:0;width:130px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.8),transparent);animation:sheen 2.6s ease-in-out infinite}
+@keyframes sheen{from{left:-150px}to{left:110%}}
+.row.won .rank{background:linear-gradient(135deg,#f5b301,#ff8a00);font-size:38px}
 .row.won .vt b{color:#b45309}
-.winTag.big{font-size:30px;background:linear-gradient(90deg,#f5b301,#ffd34d);color:#5a3c00;border:3px solid #b45309;box-shadow:0 0 14px rgba(245,179,1,.7);animation:glow 1.2s infinite alternate}
-@keyframes glow{from{box-shadow:0 0 8px rgba(245,179,1,.5)}to{box-shadow:0 0 22px rgba(245,179,1,.95)}}
+.row.won .bar i{background:linear-gradient(90deg,#f5b301,#ff8a00)}
+.winTag.big{font-size:26px;background:linear-gradient(90deg,#f5b301,#ffd34d);color:#5a3c00;border:3px solid #b45309;box-shadow:0 0 14px rgba(245,179,1,.7);animation:glow 1.2s infinite alternate}
+@keyframes glow{from{box-shadow:0 0 8px rgba(245,179,1,.5)}to{box-shadow:0 0 24px rgba(245,179,1,.95)}}
+/* TICKER */
+#ticker{height:42px;margin:8px 48px 0;background:rgba(11,21,48,.95);border-radius:14px;overflow:hidden;white-space:nowrap;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+#tickTxt{display:inline-block;padding-left:100%;animation:tick 30s linear infinite;font-size:22px;font-weight:700;color:#ffe9a8}
+@keyframes tick{to{transform:translateX(-100%)}}
+/* BOTTOM */
+#bottom{height:80px;margin:10px 48px 14px;background:rgba(11,21,48,.95);border-radius:18px;display:flex;align-items:center;gap:16px;padding:0 24px;color:#fff}
+#prog{flex:1;height:14px;background:#2a3a6e;border-radius:99px;overflow:hidden}
+#prog i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d21f26,#f5b301,#22c55e);box-shadow:0 0 12px rgba(245,179,1,.8)}
+#bottom .t{font-size:20px;font-weight:700;white-space:nowrap}
+#bottom select,#bottom button{font-size:18px;font-weight:700;padding:8px 14px;border-radius:10px;border:none;font-family:inherit}
+#bottom select{max-width:360px}
+#bottom button{background:#243a8f;color:#fff;cursor:pointer;transition:.15s}
+#bottom button:hover{filter:brightness(1.25)}
+#bottom button.g{background:#0a7a3d}
+body.obs #bottom .hideobs{display:none!important}
 /* flower shower */
 #petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:200}
 .petal{position:absolute;top:-90px;animation-name:petalFall;animation-timing-function:linear;animation-fill-mode:forwards}
 @keyframes petalFall{to{transform:translateY(1200px) rotate(540deg)}}
-/* BOTTOM */
-#bottom{height:96px;margin:0 48px 22px;background:#0b1530;border-radius:20px;display:flex;align-items:center;gap:18px;padding:0 28px;color:#fff}
-#prog{flex:1;height:16px;background:#2a3a6e;border-radius:99px;overflow:hidden}
-#prog i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d21f26,#f5b301,#22c55e)}
-#bottom .t{font-size:24px;font-weight:700;white-space:nowrap}
-#bottom select,#bottom button{font-size:22px;font-weight:700;padding:10px 18px;border-radius:12px;border:none;font-family:inherit}
-#bottom select{max-width:420px}
-#bottom button{background:#243a8f;color:#fff;cursor:pointer}
-#bottom button.g{background:#0a7a3d}
-body.obs #bottom .hideobs{display:none!important}
-/* empty msg */
-#empty{font-size:34px;text-align:center;padding:60px;color:#445}
 </style>
 </head>
 <body>
 <div id="wrap"><div id="stage">
+  <div id="fx"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
   <div id="top">
     <div id="logo">🌳</div>
     <div><h1>नेपाली कांग्रेस • १५औं महाधिवेशन</h1><p id="subLine">केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
-    <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div></div>
+    <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div><div id="clock">--:--:--</div></div>
   </div>
   <div id="catbar">
     <h2 id="catTitle">—</h2>
@@ -86,6 +111,7 @@ body.obs #bottom .hideobs{display:none!important}
     <span class="pill vote" id="votePill">—</span>
   </div>
   <div id="list"></div>
+  <div id="ticker"><span id="tickTxt">🌳 नेपाली कांग्रेस १५औं महाधिवेशन •</span></div>
   <div id="bottom">
     <div id="prog"><i id="progBar"></i></div>
     <span class="t" id="pageInfo">—</span>
@@ -93,7 +119,7 @@ body.obs #bottom .hideobs{display:none!important}
     <button id="prevBtn" class="hideobs">◀</button>
     <button id="playBtn" class="g">⏸</button>
     <button id="nextBtn" class="hideobs">▶</button>
-    <a href="admin.html" target="_blank" class="hideobs" style="color:#f5b301;font-size:22px;font-weight:800;text-decoration:none">⚙ Admin</a>
+    <a href="admin.html" target="_blank" class="hideobs" style="color:#f5b301;font-size:18px;font-weight:800;text-decoration:none">⚙ Admin</a>
   </div>
   <div id="petals"></div>
 </div></div>
@@ -106,9 +132,22 @@ function fit(){
   document.getElementById('stage').style.transform=`scale(${sc})`;
 }
 addEventListener('resize',fit); fit();
+// ambient sparkles
+(function(){
+  const fx=document.getElementById('fx');
+  for(let i=0;i<22;i++){
+    const s=document.createElement('span');s.className='sp';
+    const sz=3+Math.random()*6;
+    s.style.cssText=`left:${Math.random()*1920}px;top:${300+Math.random()*780}px;width:${sz}px;height:${sz}px;background:${Math.random()>.5?'#f5b301':'#fff'};opacity:.6;animation-duration:${6+Math.random()*9}s;animation-delay:${Math.random()*8}s`;
+    fx.appendChild(s);
+  }
+})();
+// live NPT clock
+function tickClock(){try{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kathmandu',hour:'2-digit',minute:'2-digit',second:'2-digit'})+' NPT';}catch(e){}}
+setInterval(tickClock,1000);tickClock();
 
 const qs=new URLSearchParams(location.search);
-const PER=parseInt(qs.get('per')||'7',10)||7; // rows per screen - simple & clear
+const PER=parseInt(qs.get('per')||'6',10)||6; // rows per screen — fits exact 1080p
 let intervalSec=parseInt(qs.get('interval')||'12',10)||12;
 let playing=qs.get('play')!=='0';
 let votes={};
@@ -121,7 +160,7 @@ const cats=[];const map=new Map();
 for(const c of CANDIDATES){if(!map.has(c.cat))map.set(c.cat,{cat:c.cat,seats:c.seats||1,cands:[]});map.get(c.cat).cands.push(c);}
 for(const v of map.values())cats.push(v);
 // build pages: each page = one screen (max PER rows)
-let pages=[]; // {catIdx,page,totalPages,list,cat,seats}
+let pages=[];
 function buildPages(){
   pages=[];
   cats.forEach((c,ci)=>{
@@ -136,14 +175,26 @@ const $=id=>document.getElementById(id);
 const DELEGATES=7255, VOTES_CAST=7039;
 const TURNOUT_PCT=(VOTES_CAST/DELEGATES*100).toFixed(2);
 $('subLine').textContent=`केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count • ${DELEGATES.toLocaleString()} प्रतिनिधि • ${VOTES_CAST.toLocaleString()} मत (${TURNOUT_PCT}% मतदान)`;
+// animation state
+const lastVotes={};const lastOrder={};let lastSlideKey='';
+function countUp(elm,from,to){
+  if(from===to){elm.textContent=to.toLocaleString();return;}
+  const t0=performance.now(),d=900;
+  (function f(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);
+    elm.textContent=Math.round(from+(to-from)*e).toLocaleString();
+    if(p<1)requestAnimationFrame(f);})(t0);
+}
 function renderSel(){
-  $('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat}</option>`).join('');
+  $('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat} (${c.cands.length})</option>`).join('');
 }
 function render(){
   if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
   const pg=pages[pi],c=cats[pg.catIdx];
+  const slideKey=pg.catIdx+'-'+pg.page;
   $('catSel').value=pg.catIdx;
-  $('catTitle').textContent=(pg.catIdx+1)+'. '+pg.cat+(c.cands.some(x=>x.unopposed)?' 🏆':'');
+  // retrigger title animation
+  const ct=$('catTitle');ct.style.animation='none';void ct.offsetWidth;ct.style.animation='';
+  ct.textContent=(pg.catIdx+1)+'. '+pg.cat+(c.cands.some(x=>x.unopposed)?' 🏆':'');
   $('seatPill').textContent=pg.seats+' पद';
   $('candPill').textContent=c.cands.length+' उम्मेदवार';
   const total=c.cands.reduce((a,x)=>a+(votes[x.id]||0),0);
@@ -151,20 +202,41 @@ function render(){
   $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
   $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?'अग्रता: '+(pg.full[0]?pg.full[0].name:'—'):'मतगणना बाँकी'}`;
   const max=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
-  // global rank lookup
   const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
-  $('list').innerHTML=pg.list.map(x=>{
+  const prev=lastOrder[pg.catIdx]||[];
+  $('list').innerHTML=pg.list.map((x,i)=>{
     const v=votes[x.id]||0,pct=Math.round(v/max*100),r=rankOf(x.id);
     const lead=total>0&&r<=pg.seats;
     const won=!!x.unopposed;
+    let mv='';
+    if(total>0&&prev.length){
+      const o=prev.indexOf(x.id);
+      if(o===-1)mv='<span class="mv same">•</span>';
+      else if(o===r-1)mv='<span class="mv same">•</span>';
+      else if(o>r-1)mv=`<span class="mv up">▲${o-(r-1)}</span>`;
+      else mv=`<span class="mv dn">▼${(r-1)-o}</span>`;
+    }
     const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${(x.name||'?').trim().charAt(0)}</div>'">`:`<div class="av">${(x.name||'?').trim().charAt(0)}</div>`;
     const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
-      :`<div class="vt"><b>${v.toLocaleString()}</b><br><span>भोट • ${pct}%</span></div>`;
-    return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}"><div class="rank">${won?'🏆':r}</div>${ph}
-    <div class="nm"><b>${x.ballot}. ${x.name}${(lead&&!won)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+      :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b><br><span>भोट • ${pct}%</span></div>`;
+    return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
+    <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
     ${vt}
-    <div class="bar"><i style="width:${won?100:pct}%"></i></div></div>`;
+    <div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
   }).join('');
+  // count-up animation
+  document.querySelectorAll('#list [data-vid]').forEach(b=>{
+    const id=b.dataset.vid,to=+b.dataset.v;
+    const from=(slideKey===lastSlideKey)?(lastVotes[id]||0):0;
+    countUp(b,from,to);lastVotes[id]=to;
+  });
+  lastSlideKey=slideKey;
+  if(total>0)lastOrder[pg.catIdx]=pg.full.map(x=>x.id);
+  // ticker: turnout + hottest races
+  const hot=[...cats].map(cc=>({cc,t:cc.cands.reduce((a,x)=>a+(votes[x.id]||0),0)}))
+    .filter(o=>o.t>0).sort((a,b)=>b.t-a.t).slice(0,3)
+    .map(o=>{const f=[...o.cc.cands].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));return `${o.cc.cat.split('(')[0].trim()}: ${f[0].name} ${votes[f[0].id].toLocaleString()} 🥇`;}).join(' • ');
+  $('tickTxt').textContent=`🌳 नेपाली कांग्रेस १५औं महाधिवेशन • निर्वाचन समिति: ${DELEGATES.toLocaleString()} प्रतिनिधिमध्ये ${VOTES_CAST.toLocaleString()} मत (${TURNOUT_PCT}% मतदान)${hot?' • 🔥 '+hot:''} • `;
   // flower shower for निर्विरोध winners
   if(pg.list.some(x=>x.unopposed))startPetals();else stopPetals();
 }
