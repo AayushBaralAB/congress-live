@@ -99,7 +99,6 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .duelCard .dbar i{display:block;height:100%;background:linear-gradient(90deg,#d21f26,#3b5bff);animation:barGrow 1.2s ease both}
 .duelCard.lead .dbar i{background:linear-gradient(90deg,var(--green),#22c55e)}
 #vsBadge{align-self:center;min-width:126px;height:126px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffd34d,#b45309);color:#fff;font-size:50px;font-weight:800;display:flex;align-items:center;justify-content:center;border:5px solid #fff;box-shadow:0 0 36px rgba(245,179,1,.7);animation:pulse 1.6s infinite;z-index:2}
-#marginLine{text-align:center;font-size:26px;font-weight:800;color:var(--green);margin-top:4px}
 /* TICKER + BOTTOM — deep navy bands */
 #ticker{height:42px;margin:8px 48px 0;background:linear-gradient(90deg,#0a1330,#1a2a6e,#0a1330);border-radius:14px;overflow:hidden;white-space:nowrap;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 #tickTxt{display:inline-block;padding-left:100%;animation:tick 30s linear infinite;font-size:22px;font-weight:700;color:#ffe9a8}
@@ -224,30 +223,25 @@ function render(){
       elm.textContent=`🗳️ ${Math.round(to*e).toLocaleString()} मत खस्यो`;
       if(p<1)requestAnimationFrame(f);})(t0);})();
   $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
-  $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?`अग्रता: ${pg.full[0]?pg.full[0].name:'—'} (+${((pg.full[0]?(votes[pg.full[0].id]||0):0)-(pg.full[1]?(votes[pg.full[1].id]||0):0)).toLocaleString()})`:'मतगणना बाँकी'}`;
+  $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?('जम्मा '+total.toLocaleString()+' भोट'):'मतगणना बाँकी'}`;
   const listEl=$('list');
   if(c.cands.length<=2&&pg.totalPages===1){
     listEl.classList.add('duel');
     const mx=Math.max(1,...pg.full.map(x=>votes[x.id]||0));
-    const w=pg.full[0]?votes[pg.full[0].id]||0:0, r=pg.full[1]?votes[pg.full[1].id]||0:0;
-    const card=(x,i)=>{const v=votes[x.id]||0,pct=Math.round(v/mx*100),isL=total>0&&i===0;
+    const card=(x,i)=>{const v=votes[x.id]||0,pct=Math.round(v/mx*100);
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
-      return `<div class="duelCard ${isL?'lead':''}" style="--d:${i*140}ms">${ph}<h3>${x.ballot}. ${x.name}${x.unopposed?' 🏆':''}</h3>
+      return `<div class="duelCard" style="--d:${i*140}ms">${ph}<h3>${x.ballot}. ${x.name}${x.unopposed?' 🏆':''}</h3>
       <div class="vv" data-vid="${x.id}" data-v="${v}">0</div>${x.unopposed?'<div class="pp">🎉 विजयी</div>':''}
       <div class="dbar"><i style="--w:${x.unopposed?100:pct}%"></i></div></div>`;};
-    listEl.innerHTML=`<div class="duelRow">`+card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')+`</div>`
-      +((total>0&&pg.full[1])?`<div id="marginLine"></div>`:'');
-    const ml=$('marginLine');
-    if(ml)ml.textContent=`⚡ ${pg.full[0].name} ${Math.abs(w-r).toLocaleString()} मतले अगाडि`;
+    listEl.innerHTML=`<div class="duelRow">`+card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')+`</div>`;
   }else{
     listEl.classList.remove('duel');
     const mx=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
     const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
     const prev=lastOrder[pg.catIdx]||[];
-    const lv=pg.full[0]?(votes[pg.full[0].id]||0):0, sv=pg.full[1]?(votes[pg.full[1].id]||0):0, mg=lv-sv;
     listEl.innerHTML=pg.list.map((x,i)=>{
       const v=votes[x.id]||0,pct=Math.round(v/mx*100),r=rankOf(x.id);
-      const lead=total>0&&r<=pg.seats, won=!!x.unopposed;
+      const won=!!x.unopposed;
       let mv='';
       if(total>0&&prev.length){const o=prev.indexOf(x.id);
         if(o===-1||o===r-1)mv='<span class="mv same">•</span>';
@@ -256,8 +250,8 @@ function render(){
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
       const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
         :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b></div>`;
-      return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
-      <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?(r===1?`<span class="winTag">👑 अग्रता +${mg.toLocaleString()}</span>`:'<span class="winTag">★ Leading</span>'):''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+      return `<div class="row ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
+      <div class="nm"><b>${x.ballot}. ${x.name}${mv}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
       ${vt}<div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
     }).join('');
   }
