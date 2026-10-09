@@ -56,21 +56,21 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .row{background:#fff;border:3px solid #dbe3f5;border-radius:18px;display:flex;align-items:center;gap:20px;padding:10px 24px 10px 12px;position:relative;overflow:hidden;box-shadow:0 5px 16px rgba(10,20,60,.1);animation:rowIn .55s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
 @keyframes rowIn{from{opacity:0;transform:translateX(90px) scale(.97)}}
 .row.lead{border-color:var(--green);background:linear-gradient(90deg,#f0fdf4,#fff);box-shadow:0 0 20px rgba(10,122,61,.3)}
-.row .rank{min-width:68px;height:68px;border-radius:50%;background:var(--navy);color:#fff;font-size:32px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.row .rank{min-width:74px;height:74px;border-radius:50%;background:var(--navy);color:#fff;font-size:36px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .row.lead .rank{background:var(--green)}
-.row img,.row .av{width:78px;height:78px;border-radius:50%;object-fit:cover;background:#dbe3f5;flex-shrink:0;border:3px solid #dbe3f5}
+.row img,.row .av{width:86px;height:86px;border-radius:50%;object-fit:cover;background:#dbe3f5;flex-shrink:0;border:3px solid #dbe3f5}
 .row.lead img,.row.lead .av{border-color:var(--green)}
-.row .av{display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
+.row .av{display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
 .row .nm{flex:1;min-width:0}
-.row .nm b{font-size:31px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .nm b{font-size:38px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mv{font-size:21px;font-weight:800;margin-left:10px}
 .mv.up{color:#0a7a3d}.mv.dn{color:#d21f26}.mv.same{color:#98a2c3}
 .row .bar{position:absolute;left:0;bottom:0;height:8px;background:#e7ecf6;width:100%}
 .row .bar i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,#d21f26,#3b5bff);animation:barGrow 1.1s ease both}
 .row.lead .bar i{background:linear-gradient(90deg,var(--green),#22c55e)}
 @keyframes barGrow{from{width:0}}
-.row .vt{text-align:right;min-width:205px}
-.row .vt b{font-size:44px;font-weight:800;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.row .vt{text-align:right;min-width:230px}
+.row .vt b{font-size:56px;font-weight:800;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
 .row.lead .vt b{color:var(--green)}
 .row .vt span{font-size:19px;color:var(--mut);font-weight:700}
 .winTag{font-size:23px;font-weight:800;background:linear-gradient(180deg,#12a150,#0a7a3d);color:#fff;border:3px solid #0a7a3d;border-radius:999px;padding:3px 18px;margin-left:12px;vertical-align:middle;white-space:nowrap;box-shadow:0 0 14px rgba(10,122,61,.55)}
@@ -88,11 +88,11 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .duelRow{display:flex;gap:28px;justify-content:center;align-items:center;flex:1;min-height:0}
 .duelCard{flex:1;max-width:760px;background:#fff;border:3px solid #dbe3f5;border-radius:28px;display:flex;flex-direction:column;align-items:center;padding:30px 30px 26px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(10,20,60,.14);animation:rowIn .6s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
 .duelCard.lead{border-color:var(--green);box-shadow:0 0 36px rgba(10,122,61,.35)}
-.duelCard img,.duelCard .av{width:210px;height:210px;border-radius:50%;object-fit:cover;border:6px solid #dbe3f5;box-shadow:0 10px 26px rgba(0,0,0,.2)}
+.duelCard img,.duelCard .av{width:240px;height:240px;border-radius:50%;object-fit:cover;border:6px solid #dbe3f5;box-shadow:0 10px 26px rgba(0,0,0,.2)}
 .duelCard.lead img{border-color:var(--green)}
-.duelCard .av{display:flex;align-items:center;justify-content:center;font-size:100px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
-.duelCard h3{font-size:44px;font-weight:800;margin-top:16px;text-align:center;line-height:1.2;color:var(--navy)}
-.duelCard .vv{font-size:80px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.1}
+.duelCard .av{display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
+.duelCard h3{font-size:54px;font-weight:800;margin-top:16px;text-align:center;line-height:1.2;color:var(--navy)}
+.duelCard .vv{font-size:96px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.1}
 .duelCard.lead .vv{color:var(--green)}
 .duelCard .pp{font-size:24px;color:var(--mut);font-weight:700}
 .duelCard .dbar{width:100%;height:14px;background:#e7ecf6;border-radius:99px;margin-top:14px;overflow:hidden}
