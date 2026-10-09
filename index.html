@@ -16,7 +16,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 #top{height:150px;display:flex;align-items:center;gap:20px;padding:22px 48px;color:#fff}
 #logo{width:96px;height:96px;background:#fff;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:58px}
 #top h1{font-size:52px;font-weight:800;line-height:1.05}
-#top p{font-size:26px;opacity:.92;font-weight:600}
+#top p{font-size:23px;opacity:.92;font-weight:600}
 #liveBox{margin-left:auto;text-align:right}
 #liveBadge{background:#d21f26;color:#fff;font-weight:800;font-size:34px;padding:8px 30px;border-radius:999px;display:inline-flex;align-items:center;gap:12px}
 #liveBadge i{width:20px;height:20px;background:#fff;border-radius:50%;animation:blink 1s infinite}
@@ -76,7 +76,7 @@ body.obs #bottom .hideobs{display:none!important}
 <div id="wrap"><div id="stage">
   <div id="top">
     <div id="logo">🌳</div>
-    <div><h1>नेपाली कांग्रेस • १५औं महाधिवेशन</h1><p>केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
+    <div><h1>नेपाली कांग्रेस • १५औं महाधिवेशन</h1><p id="subLine">केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
     <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div></div>
   </div>
   <div id="catbar">
@@ -132,6 +132,10 @@ function buildPages(){
 }
 let pi=parseInt(qs.get('slide')||'0',10)||0;
 const $=id=>document.getElementById(id);
+// निर्वाचन समिति आधिकारिक तथ्यांक: ७,२५५ प्रतिनिधिमध्ये ७,०३९ मत
+const DELEGATES=7255, VOTES_CAST=7039;
+const TURNOUT_PCT=(VOTES_CAST/DELEGATES*100).toFixed(2);
+$('subLine').textContent=`केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count • ${DELEGATES.toLocaleString()} प्रतिनिधि • ${VOTES_CAST.toLocaleString()} मत (${TURNOUT_PCT}% मतदान)`;
 function renderSel(){
   $('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat}</option>`).join('');
 }
