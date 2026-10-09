@@ -84,7 +84,8 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .winTag.big{font-size:24px;background:linear-gradient(90deg,#f5b301,#ffd34d);color:#4a3200;border:3px solid var(--gold2);animation:glow 1.2s infinite alternate}
 @keyframes glow{from{box-shadow:0 0 8px rgba(245,179,1,.5)}to{box-shadow:0 0 26px rgba(245,179,1,.95)}}
 /* DUEL */
-#list.duel{flex-direction:row;align-items:stretch;gap:28px;justify-content:center}
+#list.duel{justify-content:center}
+.duelRow{display:flex;gap:28px;justify-content:center;align-items:center;flex:1;min-height:0}
 .duelCard{flex:1;max-width:760px;background:#fff;border:3px solid #dbe3f5;border-radius:28px;display:flex;flex-direction:column;align-items:center;padding:30px 30px 26px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(10,20,60,.14);animation:rowIn .6s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
 .duelCard.lead{border-color:var(--green);box-shadow:0 0 36px rgba(10,122,61,.35)}
 .duelCard img,.duelCard .av{width:210px;height:210px;border-radius:50%;object-fit:cover;border:6px solid #dbe3f5;box-shadow:0 10px 26px rgba(0,0,0,.2)}
@@ -234,7 +235,7 @@ function render(){
       return `<div class="duelCard ${isL?'lead':''}" style="--d:${i*140}ms">${ph}<h3>${x.ballot}. ${x.name}${x.unopposed?' 🏆':''}</h3>
       <div class="vv" data-vid="${x.id}" data-v="${v}">0</div><div class="pp">भोट • ${pct}%${x.unopposed?' • 🎉 विजयी':''}</div>
       <div class="dbar"><i style="--w:${x.unopposed?100:pct}%"></i></div></div>`;};
-    listEl.innerHTML=card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')
+    listEl.innerHTML=`<div class="duelRow">`+card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')+`</div>`
       +((total>0&&pg.full[1])?`<div id="marginLine"></div>`:'');
     const ml=$('marginLine');
     if(ml)ml.textContent=`⚡ ${pg.full[0].name} ${Math.abs(w-r).toLocaleString()} मतले अगाडि`;
