@@ -175,8 +175,12 @@ let intervalSec=parseInt(qs.get('interval')||'12',10)||12;
 let playing=qs.get('play')!=='0';
 let votes={};
 try{Object.assign(votes,JSON.parse(localStorage.getItem('nc_votes')||'{}'))}catch(e){}
+// GIT is the source of truth: votes.json (auto-refresh every 5s). localStorage = offline fallback only.
+let remoteOk=false;
 async function loadRemote(){
-  try{const r=await fetch('votes.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();const hasLocal=!!localStorage.getItem('nc_votes');for(const k in j){if(!hasLocal)votes[k]=j[k];else votes[k]=Math.max(votes[k]||0,j[k]);}}}catch(e){}
+  try{const r=await fetch('votes.json?t='+Date.now(),{cache:'no-store'});
+    if(r.ok){const j=await r.json();remoteOk=true;votes={};for(const k in j)votes[k]=j[k];return true;}}catch(e){}
+  return false;
 }
 const cats=[];const map=new Map();
 for(const c of CANDIDATES){if(!map.has(c.cat))map.set(c.cat,{cat:c.cat,seats:c.seats||1,cands:[]});map.get(c.cat).cands.push(c);}
@@ -314,7 +318,9 @@ window.addEventListener('storage',e=>{if(e.key==='nc_votes'){try{votes=JSON.pars
 buildPages();renderSel();render();
 $('playBtn').textContent=playing?'⏸':'▶';
 loadRemote().then(()=>{buildPages();render();});
-setInterval(async()=>{const b=JSON.stringify(votes);await loadRemote();try{const l=JSON.parse(localStorage.getItem('nc_votes')||'{}');for(const k in l)votes[k]=l[k];}catch(e){}if(JSON.stringify(votes)!==b){buildPages();if(pi>=pages.length)pi=0;render();}},5000);
+setInterval(async()=>{const b=JSON.stringify(votes);await loadRemote();
+  if(!remoteOk){try{const l=JSON.parse(localStorage.getItem('nc_votes')||'{}');for(const k in l)votes[k]=l[k];}catch(e){}}
+  if(JSON.stringify(votes)!==b){buildPages();if(pi>=pages.length)pi=0;render();}},5000);
 </script>
 </body>
 </html>

@@ -146,6 +146,8 @@ document.getElementById('autoBtn').onclick=e=>{
   autoTimer=setTimeout(loop,100);
 };
 document.getElementById('reset').onclick=()=>{if(confirm('सबै भोट 0 गर्ने?')){votes={};localStorage.setItem('nc_votes','{}');render();}};
+// GIT is the source of truth: load votes.json data on start
+fetch('votes.json?t='+Date.now()).then(r=>r.json()).then(j=>{votes=j;try{localStorage.setItem('nc_votes',JSON.stringify(votes));}catch(e){}render();}).catch(()=>{});
 render();
 </script>
 </body>
