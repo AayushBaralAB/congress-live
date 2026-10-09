@@ -3,164 +3,346 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NC 15th Mahadhiveshan – Live Vote Count (16:9)</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>नेपाली कांग्रेस १५औं महाधिवेशन — Live Election Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
 <script src="candidates.js"></script>
 <style>
+:root{
+  --navy:#0a1330; --navy2:#111c44; --card:#16224e; --line:#2a3a72;
+  --gold:#f5b301; --green:#22c55e; --red:#ef4444; --blue:#5b8cff;
+  --txt:#f2f5ff; --mut:#9aa7d0;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanagari',sans-serif;overflow:hidden}
-/* outside wrapper centers 16:9 stage */
-#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
-#stage{width:1920px;height:1080px;flex-shrink:0;transform-origin:center center;background:linear-gradient(180deg,#0b1e5b 0%,#122c8a 30%,#f2f4f9 30.2%);color:#16213a;display:flex;flex-direction:column;position:relative}
-/* TOP BAR */
-#top{height:150px;display:flex;align-items:center;gap:20px;padding:22px 48px;color:#fff}
-#logo{width:96px;height:96px;background:#fff;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:58px}
-#top h1{font-size:52px;font-weight:800;line-height:1.05}
-#top p{font-size:26px;opacity:.92;font-weight:600}
-#liveBox{margin-left:auto;text-align:right}
-#liveBadge{background:#d21f26;color:#fff;font-weight:800;font-size:34px;padding:8px 30px;border-radius:999px;display:inline-flex;align-items:center;gap:12px}
-#liveBadge i{width:20px;height:20px;background:#fff;border-radius:50%;animation:blink 1s infinite}
-@keyframes blink{50%{opacity:.2}}
-#slideNo{font-size:28px;font-weight:700;margin-top:8px;opacity:.95}
-/* CATEGORY BAR */
-#catbar{margin:18px 48px 0;background:#fff;border-radius:24px;border-left:16px solid #d21f26;padding:20px 34px;display:flex;align-items:center;gap:24px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
-#catbar h2{font-size:48px;font-weight:800;color:#102a7a;line-height:1.15;flex:1}
-.pill{font-size:26px;font-weight:800;padding:10px 26px;border-radius:999px;white-space:nowrap}
-.pill.seat{background:#e7f8ee;color:#0a6a35;border:3px solid #0a7a3d}
-.pill.cand{background:#eef2ff;color:#1e2f8f;border:3px solid #1e2f8f}
-.pill.vote{background:#fff1f1;color:#b3121a;border:3px solid #d21f26}
-/* LIST */
-#list{flex:1;margin:18px 48px;display:flex;flex-direction:column;gap:14px;justify-content:flex-start}
-.row{background:#fff;border-radius:20px;display:flex;align-items:center;gap:22px;padding:12px 26px 12px 14px;box-shadow:0 4px 14px rgba(10,20,60,.12);border:4px solid transparent;position:relative;overflow:hidden}
-.row.lead{border-color:#0a7a3d;background:linear-gradient(90deg,#f0fdf4,#fff)}
-.row .rank{min-width:78px;height:78px;border-radius:50%;background:#102a7a;color:#fff;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center}
-.row.lead .rank{background:#0a7a3d}
-.row img,.row .av{width:92px;height:92px;border-radius:18px;object-fit:cover;background:#dbe3f5;flex-shrink:0}
-.row .av{display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:800;color:#fff;background:linear-gradient(135deg,#102a7a,#0a7a3d)}
-.row .nm{flex:1;min-width:0}
-.row .nm b{font-size:38px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .nm span{font-size:24px;color:#66739a;font-weight:600}
-.row .bar{position:absolute;left:0;bottom:0;height:10px;background:#e7ecf6;width:100%}
-.row .bar i{display:block;height:100%;background:#3b82f6}
-.row.lead .bar i{background:#22c55e}
-.row .vt{text-align:right;min-width:230px}
-.row .vt b{font-size:56px;font-weight:800;color:#102a7a;line-height:1}
-.row.lead .vt b{color:#0a6a35}
-.row .vt span{font-size:24px;color:#66739a;font-weight:700}
-.winTag{font-size:22px;font-weight:800;background:#fef3c7;color:#92400e;border:2px solid #f5b301;border-radius:999px;padding:2px 16px;margin-left:12px;vertical-align:middle}
-/* BOTTOM */
-#bottom{height:96px;margin:0 48px 22px;background:#0b1530;border-radius:20px;display:flex;align-items:center;gap:18px;padding:0 28px;color:#fff}
-#prog{flex:1;height:16px;background:#2a3a6e;border-radius:99px;overflow:hidden}
-#prog i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d21f26,#f5b301,#22c55e)}
-#bottom .t{font-size:24px;font-weight:700;white-space:nowrap}
-#bottom select,#bottom button{font-size:22px;font-weight:700;padding:10px 18px;border-radius:12px;border:none;font-family:inherit}
-#bottom select{max-width:420px}
-#bottom button{background:#243a8f;color:#fff;cursor:pointer}
-#bottom button.g{background:#0a7a3d}
-body.obs #bottom .hideobs{display:none!important}
-/* empty msg */
-#empty{font-size:34px;text-align:center;padding:60px;color:#445}
+body{font-family:'Noto Sans Devanagari','Inter',sans-serif;background:radial-gradient(1200px 600px at 80% -10%,#1b2a6e 0%,var(--navy) 55%) fixed,var(--navy);color:var(--txt);min-height:100vh}
+/* tricolor top strip */
+#strip{height:6px;background:linear-gradient(90deg:#d21f26 0 33%,#f5f5f5 33% 66%,#0a7a3d 66% 100%)}
+/* HEADER */
+header{display:flex;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--line);background:rgba(10,19,48,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:40}
+#logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#fff,#dbe6ff);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 0 18px rgba(245,179,1,.35)}
+header h1{font-size:22px;font-weight:800;letter-spacing:.2px}
+header h1 small{color:var(--gold)}
+header p{font-size:13px;color:var(--mut);font-weight:600}
+#hRight{margin-left:auto;display:flex;align-items:center;gap:12px}
+#clock{text-align:right;line-height:1.2}
+#clock b{font-size:20px;font-variant-numeric:tabular-nums}
+#clock span{font-size:12px;color:var(--mut);font-weight:700}
+#liveBadge{background:var(--red);font-weight:800;font-size:15px;padding:8px 18px;border-radius:999px;display:flex;align-items:center;gap:8px;box-shadow:0 0 16px rgba(239,68,68,.6)}
+#liveBadge i{width:10px;height:10px;background:#fff;border-radius:50%;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.25}}
+/* NAV */
+nav{display:flex;gap:10px;align-items:center;padding:12px 28px;flex-wrap:wrap}
+.tab{border:2px solid var(--line);background:transparent;color:var(--txt);font-family:inherit;font-weight:800;font-size:15px;padding:9px 22px;border-radius:999px;cursor:pointer;transition:.15s}
+.tab.active{background:var(--gold);border-color:var(--gold);color:#231a00}
+.tab:hover{border-color:var(--gold)}
+nav .sp{flex:1}
+.ctl{background:var(--card);border:2px solid var(--line);color:var(--txt);border-radius:12px;padding:8px 12px;font-family:inherit;font-size:14px;font-weight:700}
+button.ctl{cursor:pointer}button.ctl:hover{border-color:var(--gold)}
+a.ctl{text-decoration:none}
+/* LAYOUT */
+main{padding:6px 28px 30px;max-width:1460px;margin:auto}
+/* STAT CARDS */
+#stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:14px 0 20px}
+.stat{background:linear-gradient(160deg,var(--card),#0e1838);border:1px solid var(--line);border-radius:18px;padding:16px 20px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ac,var(--gold))}
+.stat .ic{font-size:26px}
+.stat b{display:block;font-size:38px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:13px;color:var(--mut);font-weight:700}
+/* SECTION TITLES */
+.secT{display:flex;align-items:center;gap:12px;margin:22px 0 12px}
+.secT h2{font-size:20px;font-weight:800}
+.secT::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--line),transparent)}
+/* TOP RACES */
+#races{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+.race{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;cursor:pointer;transition:.15s}
+.race:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.race h3{font-size:16px;font-weight:800;color:var(--gold);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.race .seat{font-size:12px;color:var(--mut);font-weight:700;margin-bottom:10px}
+.raceRow{display:flex;align-items:center;gap:10px;margin-top:8px}
+.raceRow img,.raceRow .av{width:44px;height:44px;border-radius:12px;object-fit:cover;background:#2a3a72;flex-shrink:0}
+.raceRow .av{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
+.raceRow .n{flex:1;min-width:0}
+.raceRow .n b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.raceRow .n .bar{height:8px;background:#0a1330;border-radius:99px;margin-top:5px;overflow:hidden}
+.raceRow .n .bar i{display:block;height:100%;border-radius:99px}
+.raceRow .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+/* CATEGORY GRID */
+#catSearch{width:100%;margin:2px 0 12px;background:#0e1838;border:2px solid var(--line);color:var(--txt);border-radius:14px;padding:12px 18px;font-family:inherit;font-size:15px;font-weight:600}
+#catGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.cat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;cursor:pointer;transition:.15s}
+.cat:hover{transform:translateY(-3px);border-color:var(--blue);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.cat h4{font-size:15px;font-weight:800;line-height:1.35;min-height:42px}
+.cat .m{display:flex;gap:8px;margin:8px 0;font-size:12px;font-weight:800}
+.cat .m span{background:#0a1330;border:1px solid var(--line);padding:3px 10px;border-radius:999px;color:var(--mut)}
+.cat .m span.s{color:var(--green);border-color:var(--green)}
+.cat .lead{font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat .lead b{color:var(--gold)}
+.cat .mini{height:8px;background:#0a1330;border-radius:99px;margin-top:8px;overflow:hidden}
+.cat .mini i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:99px}
+/* LIVE VIEW */
+#liveView{display:none}
+#liveHead{background:linear-gradient(160deg,#fff,#eef2ff);color:#102a7a;border-radius:20px;padding:20px 28px;display:flex;align-items:center;gap:20px;border-left:12px solid #d21f26;margin:14px 0}
+#liveHead h2{font-size:30px;font-weight:800;flex:1;line-height:1.2}
+.lpill{font-size:16px;font-weight:800;padding:8px 20px;border-radius:999px;white-space:nowrap;border:3px solid}
+.lpill.s{background:#e7f8ee;color:#0a6a35;border-color:#0a7a3d}
+.lpill.c{background:#eef2ff;color:#1e2f8f;border-color:#1e2f8f}
+.lpill.v{background:#fff1f1;color:#b3121a;border-color:#d21f26}
+#liveList{display:flex;flex-direction:column;gap:12px}
+.lrow{background:#fff;color:#16213a;border-radius:18px;display:flex;align-items:center;gap:18px;padding:12px 24px 12px 12px;position:relative;overflow:hidden;border:4px solid transparent;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+.lrow.lead{border-color:var(--green);background:linear-gradient(90deg,#f0fdf4,#fff)}
+.lrow .rk{min-width:64px;height:64px;border-radius:50%;background:#102a7a;color:#fff;font-size:30px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.lrow.lead .rk{background:#0a7a3d}
+.lrow img,.lrow .av{width:76px;height:76px;border-radius:14px;object-fit:cover;background:#dbe3f5;flex-shrink:0}
+.lrow .av{display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:#fff;background:linear-gradient(135deg,#102a7a,#0a7a3d)}
+.lrow .nm{flex:1;min-width:0}
+.lrow .nm b{font-size:24px;font-weight:800;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lrow .diff{font-size:15px;font-weight:800;color:#b3121a}
+.lrow .diff.zero{color:#0a6a35}
+.lrow .vt{text-align:right;min-width:170px}
+.lrow .vt b{font-size:40px;font-weight:800;color:#102a7a;font-variant-numeric:tabular-nums;line-height:1}
+.lrow.lead .vt b{color:#0a6a35}
+.lrow .vt span{font-size:15px;color:#66739a;font-weight:700}
+.lrow .bar{position:absolute;left:0;bottom:0;height:8px;background:#e7ecf6;width:100%}
+.lrow .bar i{display:block;height:100%;background:#3b82f6}
+.lrow.lead .bar i{background:#22c55e}
+.wtag{font-size:13px;font-weight:800;background:#fef3c7;color:#92400e;border:2px solid var(--gold);border-radius:999px;padding:1px 12px;margin-left:10px;vertical-align:middle;white-space:nowrap}
+#cutoff{display:flex;align-items:center;gap:12px;color:var(--gold);font-weight:800;font-size:14px;margin:2px 4px}
+#cutoff::before,#cutoff::after{content:'';flex:1;border-top:2px dashed var(--gold)}
+#liveFoot{display:flex;align-items:center;gap:14px;margin:16px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 20px}
+#prog{flex:1;height:12px;background:#0a1330;border-radius:99px;overflow:hidden}
+#prog i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d21f26,var(--gold),var(--green))}
+#liveFoot .t{font-size:14px;font-weight:700;color:var(--mut)}
+/* TICKER */
+#ticker{margin-top:26px;background:#d21f26;color:#fff;font-weight:700;font-size:14px;padding:9px 0;overflow:hidden;white-space:nowrap;border-radius:12px}
+#ticker span{display:inline-block;padding-left:100%;animation:tick 32s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:16px;font-weight:600}
+/* ===== OBS / TV MODE: pure 16:9 stage ===== */
+#obsStage{display:none}
+body.obs{overflow:hidden}
+body.obs header,body.obs nav,body.obs main,body.obs #ticker,body.obs footer{display:none!important}
+body.obs #obsStage{display:flex;position:fixed;inset:0;align-items:center;justify-content:center;background:#000}
+#stage{width:1920px;height:1080px;flex-shrink:0;transform-origin:center center;background:linear-gradient(180deg,#0b1e5b 0%,#122c8a 26%,#eef1f7 26.2%);display:flex;flex-direction:column;color:#16213a}
+#sTop{height:170px;display:flex;align-items:center;gap:22px;padding:24px 52px;color:#fff}
+#sLogo{width:100px;height:100px;background:#fff;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:60px}
+#sTop h1{font-size:56px;font-weight:800;line-height:1}
+#sTop p{font-size:27px;font-weight:600;opacity:.92}
+#sLive{margin-left:auto;text-align:right}
+#sLiveBadge{background:#d21f26;color:#fff;font-weight:800;font-size:36px;padding:8px 32px;border-radius:999px;display:inline-flex;align-items:center;gap:12px}
+#sLiveBadge i{width:20px;height:20px;background:#fff;border-radius:50%;animation:blink 1s infinite}
+#sSlideNo{font-size:30px;font-weight:700;margin-top:8px}
+#sCat{margin:20px 52px 0;background:#fff;border-radius:26px;border-left:16px solid #d21f26;padding:22px 36px;display:flex;align-items:center;gap:24px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+#sCat h2{font-size:52px;font-weight:800;color:#102a7a;flex:1;line-height:1.15}
+#sList{flex:1;margin:20px 52px;display:flex;flex-direction:column;gap:15px;justify-content:flex-start}
+.srow{background:#fff;border-radius:22px;display:flex;align-items:center;gap:24px;padding:13px 28px 13px 15px;position:relative;overflow:hidden;border:5px solid transparent;box-shadow:0 4px 14px rgba(10,20,60,.12)}
+.srow.lead{border-color:#0a7a3d;background:linear-gradient(90deg,#f0fdf4,#fff)}
+.srow .rk{min-width:82px;height:82px;border-radius:50%;background:#102a7a;color:#fff;font-size:42px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.srow.lead .rk{background:#0a7a3d}
+.srow img,.srow .av{width:96px;height:96px;border-radius:18px;object-fit:cover;background:#dbe3f5;flex-shrink:0}
+.srow .av{display:flex;align-items:center;justify-content:center;font-size:50px;font-weight:800;color:#fff;background:linear-gradient(135deg,#102a7a,#0a7a3d)}
+.srow .nm{flex:1;min-width:0}
+.srow .nm b{font-size:42px;font-weight:800;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow .vt{text-align:right;min-width:250px}
+.srow .vt b{font-size:60px;font-weight:800;color:#102a7a;line-height:1;font-variant-numeric:tabular-nums}
+.srow.lead .vt b{color:#0a6a35}
+.srow .vt span{font-size:26px;color:#66739a;font-weight:700}
+.srow .bar{position:absolute;left:0;bottom:0;height:11px;background:#e7ecf6;width:100%}
+.srow .bar i{display:block;height:100%;background:#3b82f6}
+.srow.lead .bar i{background:#22c55e}
+#sBot{height:100px;margin:0 52px 26px;background:#0b1530;border-radius:22px;display:flex;align-items:center;gap:20px;padding:0 30px;color:#fff}
+#sProg{flex:1;height:16px;background:#2a3a6e;border-radius:99px;overflow:hidden}
+#sProg i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d21f26,#f5b301,#22c55e)}
+#sBot .t{font-size:26px;font-weight:700;white-space:nowrap}
+@media(max-width:700px){header h1{font-size:17px}#liveHead h2{font-size:22px}.lrow .nm b{font-size:18px}.lrow .vt b{font-size:30px}}
 </style>
 </head>
 <body>
-<div id="wrap"><div id="stage">
-  <div id="top">
-    <div id="logo">🌳</div>
+<div id="strip"></div>
+<header>
+  <div id="logo">🌳</div>
+  <div><h1>नेपाली कांग्रेस <small>• १५औं महाधिवेशन</small></h1><p>केन्द्रीय कार्यसमिति निर्वाचन — Official Live Results</p></div>
+  <div id="hRight">
+    <div id="clock"><b>--:--:--</b><br><span>नेपाल समय • NPT</span></div>
+    <div id="liveBadge"><i></i>LIVE</div>
+  </div>
+</header>
+<nav>
+  <button class="tab active" id="tabDash">🏠 ड्यासबोर्ड</button>
+  <button class="tab" id="tabLive">📺 Live Count</button>
+  <span class="sp"></span>
+  <select id="catJump" class="ctl" title="Category मा जानुहोस्"></select>
+  <select id="intervalSel" class="ctl" title="Slide speed">
+    <option value="8">8s / slide</option><option value="12" selected>12s / slide</option>
+    <option value="15">15s / slide</option><option value="20">20s / slide</option><option value="30">30s / slide</option>
+  </select>
+  <button class="ctl" id="playBtn">⏸ Pause</button>
+  <button class="ctl" id="fsBtn">⛶ Fullscreen</button>
+  <a class="ctl" href="admin.html" target="_blank">⚙ Admin</a>
+</nav>
+
+<main>
+  <!-- DASHBOARD -->
+  <section id="dashView">
+    <div id="stats"></div>
+    <div class="secT"><h2>🔥 चर्चित प्रतिस्पर्धा — Top Races</h2></div>
+    <div id="races"></div>
+    <div class="secT"><h2>📂 सबै पद-समूह — All Categories</h2></div>
+    <input id="catSearch" placeholder="🔍 पद-समूह खोज्नुहोस्… (जस्तै: सभापति, कोशी, मधेशी)">
+    <div id="catGrid"></div>
+  </section>
+  <!-- LIVE -->
+  <section id="liveView">
+    <div id="liveHead"><h2 id="liveTitle">—</h2>
+      <span class="lpill s" id="seatPill">—</span><span class="lpill c" id="candPill">—</span><span class="lpill v" id="votePill">—</span>
+    </div>
+    <div id="liveList"></div>
+    <div id="liveFoot"><div id="prog"><i id="progBar"></i></div><span class="t" id="pageInfo">—</span>
+      <button class="ctl" id="prevBtn">◀</button><button class="ctl" id="nextBtn">▶</button>
+    </div>
+  </section>
+  <div id="ticker"><span>🌳 नेपाली कांग्रेस १५औं महाधिवेशन — केन्द्रीय कार्यसमिति निर्वाचन मतगणना प्रत्यक्ष • ८११ उम्मेदवार • ८० पद-समूह • नतिजा admin पेजबाट अद्यावधिक हुन्छ •&nbsp;</span></div>
+</main>
+<footer>Source: nepalicongress.org/mahadhiveshan/ummedwar • Live vote-count display • OBS ready: index.html?obs=1</footer>
+
+<!-- OBS 16:9 STAGE -->
+<div id="obsStage"><div id="stage">
+  <div id="sTop"><div id="sLogo">🌳</div>
     <div><h1>नेपाली कांग्रेस • १५औं महाधिवेशन</h1><p>केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
-    <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div></div>
+    <div id="sLive"><span id="sLiveBadge"><i></i>LIVE</span><div id="sSlideNo">1 / 80</div></div>
   </div>
-  <div id="catbar">
-    <h2 id="catTitle">—</h2>
-    <span class="pill seat" id="seatPill">—</span>
-    <span class="pill cand" id="candPill">—</span>
-    <span class="pill vote" id="votePill">—</span>
-  </div>
-  <div id="list"></div>
-  <div id="bottom">
-    <div id="prog"><i id="progBar"></i></div>
-    <span class="t" id="pageInfo">—</span>
-    <select id="catSel" class="hideobs"></select>
-    <button id="prevBtn" class="hideobs">◀</button>
-    <button id="playBtn" class="g">⏸</button>
-    <button id="nextBtn" class="hideobs">▶</button>
-    <a href="admin.html" target="_blank" class="hideobs" style="color:#f5b301;font-size:22px;font-weight:800;text-decoration:none">⚙ Admin</a>
-  </div>
+  <div id="sCat"><h2 id="sCatTitle">—</h2><span class="lpill s" id="sSeat">—</span><span class="lpill c" id="sCand">—</span><span class="lpill v" id="sVote">—</span></div>
+  <div id="sList"></div>
+  <div id="sBot"><div id="sProg"><i id="sProgBar"></i></div><span class="t" id="sPage">—</span></div>
 </div></div>
 
 <script>
-// ---- fit 16:9 stage to window ----
-function fit(){
-  const s=1920,h=1080;
-  const sc=Math.min(innerWidth/s,innerHeight/h);
-  document.getElementById('stage').style.transform=`scale(${sc})`;
-}
-addEventListener('resize',fit); fit();
-
 const qs=new URLSearchParams(location.search);
-const PER=parseInt(qs.get('per')||'7',10)||7; // rows per screen - simple & clear
+const OBS=qs.get('obs')==='1';
+const PER=parseInt(qs.get('per')||'7',10)||7;
 let intervalSec=parseInt(qs.get('interval')||'12',10)||12;
-let playing=qs.get('play')!=='0';
+let playing=qs.get('play')!=='0', view=qs.get('view')||'dash';
 let votes={};
 try{Object.assign(votes,JSON.parse(localStorage.getItem('nc_votes')||'{}'))}catch(e){}
-async function loadRemote(){
-  try{const r=await fetch('votes.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();const hasLocal=!!localStorage.getItem('nc_votes');for(const k in j){if(!hasLocal)votes[k]=j[k];else votes[k]=Math.max(votes[k]||0,j[k]);}}}catch(e){}
-}
-// group categories
-const cats=[];const map=new Map();
-for(const c of CANDIDATES){if(!map.has(c.cat))map.set(c.cat,{cat:c.cat,seats:c.seats||1,cands:[]});map.get(c.cat).cands.push(c);}
-for(const v of map.values())cats.push(v);
-// build pages: each page = one screen (max PER rows)
-let pages=[]; // {catIdx,page,totalPages,list,cat,seats}
-function buildPages(){
-  pages=[];
-  cats.forEach((c,ci)=>{
-    let arr=[...c.cands].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));
-    const tp=Math.max(1,Math.ceil(arr.length/PER));
-    for(let p=0;p<tp;p++)pages.push({catIdx:ci,page:p,totalPages:tp,list:arr.slice(p*PER,(p+1)*PER),cat:c.cat,seats:c.seats,full:arr});
-  });
-}
+const V=id=>votes[id]||0;
+async function loadRemote(){try{const r=await fetch('votes.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();const hl=!!localStorage.getItem('nc_votes');for(const k in j)votes[k]=hl?Math.max(votes[k]||0,j[k]):j[k];}}catch(e){}}
+// group
+const cats=[];const _m=new Map();
+for(const c of CANDIDATES){if(!_m.has(c.cat))_m.set(c.cat,{cat:c.cat,seats:c.seats||1,cands:[]});_m.get(c.cat).cands.push(c);}
+for(const v of _m.values())cats.push(v);
+const sorted=c=>[...c.cands].sort((a,b)=>V(b.id)-V(a.id));
+const totalV=()=>Object.values(votes).reduce((a,b)=>a+(b||0),0);
+const totalSeats=()=>cats.reduce((a,c)=>a+c.seats,0);
+const countedCats=()=>cats.filter(c=>c.cands.some(x=>V(x.id)>0)).length;
+// pages for live/obs
+let pages=[];
+function buildPages(){pages=[];cats.forEach((c,ci)=>{const f=sorted(c);const tp=Math.max(1,Math.ceil(f.length/PER));for(let p=0;p<tp;p++)pages.push({ci,page:p,tp,cat:c.cat,seats:c.seats,full:f,list:f.slice(p*PER,(p+1)*PER)});});}
 let pi=parseInt(qs.get('slide')||'0',10)||0;
 const $=id=>document.getElementById(id);
-function renderSel(){
-  $('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat}</option>`).join('');
+const ph=(c,cls)=>c.photo?`<img loading="lazy" src="${c.photo}" onerror="this.outerHTML='<div class=${cls||'av'}>${(c.name||'?').trim().charAt(0)}</div>'">`:`<div class="${cls||'av'}">${(c.name||'?').trim().charAt(0)}</div>`;
+const fmt=n=>n.toLocaleString('en-US');
+// ---- clock ----
+function clock(){try{$('clock').querySelector('b').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kathmandu',hour:'2-digit',minute:'2-digit',second:'2-digit'});}catch(e){}$('clock').querySelector('b').textContent=new Date().toLocaleTimeString();}
+setInterval(clock,1000);clock();
+// ---- dashboard ----
+function renderStats(){
+  $('stats').innerHTML=`
+  <div class="stat" style="--ac:#f5b301"><div class="ic">🗳️</div><b>${fmt(totalV())}</b><span>जम्मा खसेको भोट</span></div>
+  <div class="stat" style="--ac:#5b8cff"><div class="ic">👥</div><b>811</b><span>जम्मा उम्मेदवार</span></div>
+  <div class="stat" style="--ac:#22c55e"><div class="ic">🪑</div><b>${totalSeats()}</b><span>जम्मा पद (सिट)</span></div>
+  <div class="stat" style="--ac:#ef4444"><div class="ic">📂</div><b>${cats.length}</b><span>पद-समूह</span></div>
+  <div class="stat" style="--ac:#22c55e"><div class="ic">📊</div><b>${countedCats()} / ${cats.length}</b><span>मतगणना भएका समूह</span></div>`;
 }
-function render(){
-  if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
-  const pg=pages[pi],c=cats[pg.catIdx];
-  $('catSel').value=pg.catIdx;
-  $('catTitle').textContent=(pg.catIdx+1)+'. '+pg.cat;
-  $('seatPill').textContent=pg.seats+' पद';
-  $('candPill').textContent=c.cands.length+' उम्मेदवार';
-  const total=c.cands.reduce((a,x)=>a+(votes[x.id]||0),0);
-  $('votePill').textContent='जम्मा '+total.toLocaleString()+' भोट';
-  $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
-  $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?'अग्रता: '+(pg.full[0]?pg.full[0].name:'—'):'मतगणना बाँकी'}`;
-  const max=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
-  // global rank lookup
-  const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
-  $('list').innerHTML=pg.list.map(x=>{
-    const v=votes[x.id]||0,pct=Math.round(v/max*100),r=rankOf(x.id);
-    const lead=total>0&&r<=pg.seats;
-    const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${(x.name||'?').trim().charAt(0)}</div>'">`:`<div class="av">${(x.name||'?').trim().charAt(0)}</div>`;
-    return `<div class="row ${lead?'lead':''}"><div class="rank">${r}</div>${ph}
-    <div class="nm"><b>${x.ballot}. ${x.name}${lead?'<span class="winTag">★ Leading</span>':''}${x.unopposed?'<span class="winTag" style="background:#dcfce7;color:#166534;border-color:#86efac">निर्विरोध</span>':''}</b></div>
-    <div class="vt"><b>${v.toLocaleString()}</b><br><span>भोट • ${pct}%</span></div>
-    <div class="bar"><i style="width:${pct}%"></i></div></div>`;
+function renderRaces(){
+  const hot=[...cats].sort((a,b)=>b.cands.reduce((x,y)=>x+V(y.id),0)-a.cands.reduce((x,y)=>x+V(y.id),0)).slice(0,4);
+  if(cats[0]&&!hot.includes(cats[0]))hot[3]=cats[0];
+  $('races').innerHTML=hot.map(c=>{
+    const f=sorted(c),t=f.reduce((a,x)=>a+V(x.id),0),mx=Math.max(1,V(f[0].id));
+    const row=x=>{const v=V(x.id);return `<div class="raceRow">${ph(x)}<div class="n"><b>${x.ballot}. ${x.name}</b><div class="bar"><i style="width:${Math.round(v/mx*100)}%;background:${v===V(f[0].id)?'#22c55e':'#5b8cff'}"></i></div></div><div class="v">${fmt(v)}</div></div>`;};
+    const ci=cats.indexOf(c);
+    return `<div class="race" onclick="goLive(${ci})"><h3>${c.cat}</h3><div class="seat">${c.seats} पद • ${c.cands.length} उम्मेदवार • जम्मा ${fmt(t)} भोट ${t?'• अग्रता: '+f[0].name:''}</div>${row(f[0])}${f[1]?row(f[1]):''}</div>`;
   }).join('');
 }
+let catQ='';
+function renderGrid(){
+  const list=cats.map((c,i)=>({c,i})).filter(({c})=>!catQ||c.cat.includes(catQ));
+  $('catGrid').innerHTML=list.map(({c,i})=>{
+    const f=sorted(c),t=f.reduce((a,x)=>a+V(x.id),0),mx=Math.max(1,V(f[0].id));
+    return `<div class="cat" onclick="goLive(${i})"><h4>${i+1}. ${c.cat}</h4>
+    <div class="m"><span class="s">${c.seats} पद</span><span>${c.cands.length} उम्मेदवार</span><span>${fmt(t)} भोट</span></div>
+    <div class="lead">${t?`★ <b>${f[0].name}</b> — ${fmt(V(f[0].id))} भोट`:'मतगणना बाँकी…'}</div>
+    <div class="mini"><i style="width:${t?Math.round(V(f[0].id)/mx*100):0}%"></i></div></div>`;
+  }).join('')||'<p style="color:var(--mut)">कुनै पद-समूह भेटिएन।</p>';
+}
+function renderJump(){$('catJump').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat}</option>`).join('');}
+// ---- live view ----
+function renderLive(){
+  if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
+  const pg=pages[pi],c=cats[pg.ci];
+  $('catJump').value=pg.ci;
+  $('liveTitle').textContent=(pg.ci+1)+'. '+pg.cat+(pg.tp>1?` (पेज ${pg.page+1}/${pg.tp})`:'');
+  $('seatPill').textContent=pg.seats+' पद';$('candPill').textContent=c.cands.length+' उम्मेदवार';
+  const t=c.cands.reduce((a,x)=>a+V(x.id),0);
+  $('votePill').textContent='जम्मा '+fmt(t)+' भोट';
+  $('pageInfo').textContent=`${pg.ci+1}/${cats.length}`+(pg.tp>1?` • पेज ${pg.page+1}/${pg.tp}`:'')+(t&&pg.full[0]?` • अग्रता: ${pg.full[0].name}`:'');
+  const mx=Math.max(1,...pg.list.map(x=>V(x.id))),lead0=V(pg.full[0].id);
+  const rk=id=>pg.full.findIndex(x=>x.id===id)+1;
+  let html='';
+  pg.list.forEach(x=>{
+    const v=V(x.id),r=rk(x.id),isL=t>0&&r<=pg.seats,gap=v-lead0;
+    if(r===pg.seats+1&&t>0)html+=`<div id="cutoff">✂ ${pg.seats} पद — कट-अफ लाइन ✂</div>`;
+    html+=`<div class="lrow ${isL?'lead':''}"><div class="rk">${r}</div>${ph(x)}
+    <div class="nm"><b>${x.ballot}. ${x.name}${isL?'<span class="wtag">★ Leading</span>':''}${x.unopposed?'<span class="wtag" style="background:#dcfce7;color:#166534;border-color:#86efac">निर्विरोध</span>':''}</b>
+    <span class="diff ${gap===0?'zero':''}">${t?(gap===0?'सबैभन्दा अगाडि':fmt(gap)+' भोटले पछाडि'):'—'}</span></div>
+    <div class="vt"><b>${fmt(v)}</b><br><span>भोट • ${Math.round(v/mx*100)}%</span></div>
+    <div class="bar"><i style="width:${Math.round(v/mx*100)}%"></i></div></div>`;
+  });
+  $('liveList').innerHTML=html;
+}
+// ---- obs stage ----
+function fitObs(){const sc=Math.min(innerWidth/1920,innerHeight/1080);$('stage').style.transform=`scale(${sc})`;}
+addEventListener('resize',fitObs);
+function renderObs(){
+  if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
+  const pg=pages[pi],c=cats[pg.ci];
+  $('sCatTitle').textContent=(pg.ci+1)+'. '+pg.cat;
+  $('sSeat').textContent=pg.seats+' पद';$('sCand').textContent=c.cands.length+' उम्मेदवार';
+  const t=c.cands.reduce((a,x)=>a+V(x.id),0);
+  $('sVote').textContent='जम्मा '+fmt(t)+' भोट';
+  $('sSlideNo').textContent=(pg.ci+1)+' / '+cats.length+(pg.tp>1?` • ${pg.page+1}/${pg.tp}`:'');
+  $('sPage').textContent=(t&&pg.full[0]?('अग्रता: '+pg.full[0].name):'मतगणना जारी…');
+  const mx=Math.max(1,...pg.list.map(x=>V(x.id)));
+  const rk=id=>pg.full.findIndex(x=>x.id===id)+1;
+  $('sList').innerHTML=pg.list.map(x=>{const v=V(x.id),r=rk(x.id),isL=t>0&&r<=pg.seats;
+    return `<div class="srow ${isL?'lead':''}"><div class="rk">${r}</div>${ph(x)}
+    <div class="nm"><b>${x.ballot}. ${x.name}${isL?'<span class="wtag">★ Leading</span>':''}</b></div>
+    <div class="vt"><b>${fmt(v)}</b><br><span>भोट • ${Math.round(v/mx*100)}%</span></div>
+    <div class="bar"><i style="width:${Math.round(v/mx*100)}%"></i></div></div>`;}).join('');
+  fitObs();
+}
+function render(){buildPages();if(OBS)renderObs();else{renderStats();renderRaces();renderGrid();renderLive();}}
+// nav
+window.goLive=i=>{const p=pages.findIndex(p=>p.ci===i&&p.page===0);pi=p<0?0:p;el=0;setView('live');};
+function setView(v){view=v;$('tabDash').classList.toggle('active',v==='dash');$('tabLive').classList.toggle('active',v==='live');$('dashView').style.display=v==='dash'?'':'none';$('liveView').style.display=v==='live'?'':'none';if(v==='live')renderLive();}
+$('tabDash').onclick=()=>setView('dash');$('tabLive').onclick=()=>setView('live');
+$('catJump').onchange=e=>goLive(parseInt(e.target.value,10));
+$('catSearch').oninput=e=>{catQ=e.target.value.trim();renderGrid();};
+$('intervalSel').onchange=e=>{intervalSec=parseInt(e.target.value,10);el=0;};
+function tog(){playing=!playing;el=0;$('playBtn').textContent=playing?'⏸ Pause':'▶ Play';}
+$('playBtn').onclick=tog;
+$('prevBtn').onclick=()=>{el=0;pi--;OBS?renderObs():renderLive();};
+$('nextBtn').onclick=()=>{el=0;pi++;OBS?renderObs():renderLive();};
+$('fsBtn').onclick=()=>{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();};
+document.addEventListener('keydown',e=>{if(/INPUT|SELECT/.test(e.target.tagName))return;if(e.key==='ArrowRight'){el=0;pi++;OBS?renderObs():renderLive();}if(e.key==='ArrowLeft'){el=0;pi--;OBS?renderObs():renderLive();}if(e.key===' '){e.preventDefault();tog();}});
+window.addEventListener('storage',e=>{if(e.key==='nc_votes'){try{votes=JSON.parse(localStorage.getItem('nc_votes')||'{}')}catch(_){}render();}});
+// auto-slide
 let el=0;
-setInterval(()=>{if(!playing)return;el+=0.2;$('progBar').style.width=Math.min(100,el/intervalSec*100)+'%';if(el>=intervalSec){el=0;pi++;render();}},200);
-function go(d){el=0;if(d===1||d===-1){pi+=d;render();}else{pi=pages.findIndex(p=>p.catIdx===d&&p.page===0);if(pi<0)pi=0;render();}}
-function tog(){playing=!playing;el=0;$('playBtn').textContent=playing?'⏸':'▶';}
-$('prevBtn').onclick=()=>go(-1);$('nextBtn').onclick=()=>go(1);$('playBtn').onclick=tog;
-$('catSel').onchange=e=>{go(parseInt(e.target.value,10));};
-document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key===' '){e.preventDefault();tog();}});
-if(qs.get('obs')==='1')document.body.classList.add('obs');
-window.addEventListener('storage',e=>{if(e.key==='nc_votes'){try{votes=JSON.parse(localStorage.getItem('nc_votes')||'{}')}catch(_){}buildPages();render();}});
-buildPages();renderSel();render();
-$('playBtn').textContent=playing?'⏸':'▶';
-loadRemote().then(()=>{buildPages();render();});
-setInterval(async()=>{const b=JSON.stringify(votes);await loadRemote();try{const l=JSON.parse(localStorage.getItem('nc_votes')||'{}');for(const k in l)votes[k]=l[k];}catch(e){}if(JSON.stringify(votes)!==b){buildPages();if(pi>=pages.length)pi=0;render();}},5000);
+setInterval(()=>{if(!playing)return;el+=0.2;const pct=Math.min(100,el/intervalSec*100)+'%';if($('progBar'))$('progBar').style.width=pct;if($('sProgBar'))$('sProgBar').style.width=pct;if(el>=intervalSec){el=0;pi++;OBS?renderObs():(view==='live'&&renderLive());}},200);
+// init
+if(qs.get('interval')){$('intervalSel').value=String(intervalSec);}
+if(OBS){document.body.classList.add('obs');}
+else{renderJump();setView(view==='live'?'live':'dash');}
+$('playBtn').textContent=playing?'⏸ Pause':'▶ Play';
+render();loadRemote().then(render);
+setInterval(async()=>{const b=JSON.stringify(votes);await loadRemote();try{const l=JSON.parse(localStorage.getItem('nc_votes')||'{}');for(const k in l)votes[k]=l[k];}catch(e){}if(JSON.stringify(votes)!==b)render();},5000);
 </script>
 </body>
 </html>
