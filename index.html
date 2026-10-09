@@ -35,7 +35,6 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 #liveBadge i{width:18px;height:18px;background:#fff;border-radius:50%;display:inline-block;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.2}}
 #slideNo{font-size:26px;font-weight:700;margin-top:6px;opacity:.95}
-#clock{font-size:22px;font-weight:800;color:#ffe9a8;font-variant-numeric:tabular-nums}
 /* CATEGORY BAR */
 #catbar{margin:12px 48px 0;background:rgba(255,255,255,.97);border-radius:22px;border-left:14px solid #d21f26;padding:14px 28px;display:flex;align-items:center;gap:22px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 #catbar h2{font-size:40px;font-weight:800;color:#102a7a;line-height:1.15;flex:1;animation:titleIn .5s ease both}
@@ -103,7 +102,7 @@ body.obs #bottom .hideobs{display:none!important}
   <div id="top">
     <div id="logo">🌳</div>
     <div><h1>नेपाली कांग्रेस • १५औं महाधिवेशन</h1><p id="subLine">केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
-    <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div><div id="clock">--:--:--</div></div>
+    <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div></div>
   </div>
   <div id="catbar">
     <h2 id="catTitle">—</h2>
@@ -144,10 +143,6 @@ addEventListener('resize',fit); fit();
     fx.appendChild(s);
   }
 })();
-// live NPT clock
-function tickClock(){try{document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kathmandu',hour:'2-digit',minute:'2-digit',second:'2-digit'})+' NPT';}catch(e){}}
-setInterval(tickClock,1000);tickClock();
-
 const qs=new URLSearchParams(location.search);
 const PER=parseInt(qs.get('per')||'6',10)||6; // rows per screen — fits exact 1080p
 let intervalSec=parseInt(qs.get('interval')||'12',10)||12;
