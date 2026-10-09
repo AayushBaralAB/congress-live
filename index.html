@@ -3,130 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NC 15th Mahadhiveshan – Premium Live Results</title>
+<title>NC 15th Mahadhiveshan – Live Vote Count (16:9)</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="candidates.js"></script>
 <style>
-:root{--gold:#f5b301;--gold2:#b45309;--navy:#102a7a;--red:#d21f26;--green:#0a7a3d;--mut:#5b6a99;--ink:#16213a}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanagari',sans-serif;overflow:hidden}
+/* outside wrapper centers 16:9 stage */
 #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
-#stage{width:1920px;height:1080px;flex-shrink:0;transform-origin:center center;background:radial-gradient(1000px 480px at 12% 0%,rgba(245,179,1,.20),transparent 60%),radial-gradient(900px 480px at 88% 6%,rgba(59,91,255,.16),transparent 60%),radial-gradient(800px 500px at 50% 110%,rgba(10,122,61,.12),transparent 60%),linear-gradient(180deg,#ffffff,#e9eef7);color:var(--ink);display:flex;flex-direction:column;position:relative;overflow:hidden}
-/* ambient FX */
+#stage{width:1920px;height:1080px;flex-shrink:0;transform-origin:center center;background:radial-gradient(1000px 480px at 12% 0%,rgba(245,179,1,.18),transparent 60%),radial-gradient(900px 480px at 88% 6%,rgba(59,91,255,.14),transparent 60%),radial-gradient(800px 500px at 50% 110%,rgba(10,122,61,.10),transparent 60%),linear-gradient(180deg,#ffffff,#e9eef7);color:#16213a;display:flex;flex-direction:column;position:relative;overflow:hidden}
+#goldline{position:absolute;top:0;left:0;right:0;height:7px;z-index:2;background:linear-gradient(90deg,#d21f26,#f5f5f5,#0a7a3d,#f5b301,#3b5bff,#d21f26);background-size:200% 100%;animation:lineFlow 8s linear infinite}
+@keyframes lineFlow{to{background-position:200% 0}}
+/* ambient FX layer */
 #fx{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
-.blob{position:absolute;border-radius:50%;filter:blur(140px);opacity:.35}
-.blob.b1{width:700px;height:700px;left:-200px;top:-240px;background:#9db4ff;animation:drift1 14s ease-in-out infinite alternate}
-.blob.b2{width:620px;height:620px;right:-180px;top:-200px;background:#9fe0bd;animation:drift2 18s ease-in-out infinite alternate}
-.blob.b3{width:460px;height:460px;left:38%;top:-320px;background:#ffe08a;opacity:.5;animation:drift1 22s ease-in-out infinite alternate-reverse}
+.blob{position:absolute;border-radius:50%;filter:blur(130px);opacity:.45}
+.blob.b1{width:760px;height:760px;left:-180px;top:-220px;background:#9db4ff;animation:drift1 14s ease-in-out infinite alternate}
+.blob.b2{width:680px;height:680px;right:-180px;top:-200px;background:#9fe0bd;animation:drift2 18s ease-in-out infinite alternate}
+.blob.b3{width:500px;height:500px;left:35%;top:-300px;background:#ffe08a;opacity:.5;animation:drift1 20s ease-in-out infinite alternate-reverse}
 @keyframes drift1{to{transform:translate(120px,60px) scale(1.12)}}
 @keyframes drift2{to{transform:translate(-120px,80px) scale(1.08)}}
 .sp{position:absolute;border-radius:50%;animation:floatUp linear infinite}
 @keyframes floatUp{from{transform:translateY(250px);opacity:0}10%{opacity:.8}to{transform:translateY(-1150px);opacity:0}}
-#goldline{position:absolute;top:0;left:0;right:0;height:7px;z-index:2;background:linear-gradient(90deg,#d21f26,#f5f5f5,#0a7a3d,#f5b301,#3b5bff,#d21f26);background-size:200% 100%;animation:lineFlow 8s linear infinite}
-@keyframes lineFlow{to{background-position:200% 0}}
 #top,#catbar,#list,#ticker,#bottom{position:relative;z-index:1}
-/* HEADER — white with combined colors */
-#top{height:124px;display:flex;align-items:center;gap:20px;padding:14px 48px}
-#logo{width:76px;height:76px;background:linear-gradient(135deg,#fff,#ffe9a8);border:3px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;flex-shrink:0;box-shadow:0 0 22px rgba(245,179,1,.55);animation:logoGlow 2.4s ease-in-out infinite alternate}
-@keyframes logoGlow{to{box-shadow:0 0 40px rgba(245,179,1,.85)}}
-#top h1{font-size:42px;font-weight:800;line-height:1.05;color:var(--navy)}
-#top h1 em{font-style:normal;color:var(--red)}
-#top p{font-size:20px;color:var(--mut);font-weight:600}
+/* TOP BAR */
+#top{height:150px;display:flex;align-items:center;gap:20px;padding:18px 48px}
+#logo{width:84px;height:84px;background:#fff;border:3px solid #f5b301;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:52px;flex-shrink:0;box-shadow:0 0 24px rgba(245,179,1,.45);animation:logoGlow 2.4s ease-in-out infinite alternate}
+@keyframes logoGlow{to{box-shadow:0 0 40px rgba(245,179,1,.8)}}
+#top h1{font-size:48px;font-weight:800;line-height:1.05;color:#102a7a}
+#top p{font-size:22px;opacity:.92;font-weight:600;color:#5b6a99}
 #liveBox{margin-left:auto;text-align:right}
-#liveBadge{background:linear-gradient(180deg,#ef4444,#b3121a);color:#fff;font-weight:800;font-size:30px;padding:7px 26px;border-radius:999px;display:inline-flex;align-items:center;gap:10px;border:2px solid #ff8a8a;box-shadow:0 0 18px rgba(239,68,68,.55);animation:pulse 1.6s infinite}
+#liveBadge{background:#d21f26;color:#fff;font-weight:800;font-size:32px;padding:8px 28px;border-radius:999px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 0 18px rgba(210,31,38,.7);animation:pulse 1.6s infinite}
 @keyframes pulse{50%{transform:scale(1.05)}}
-#liveBadge i{width:16px;height:16px;background:#fff;border-radius:50%;display:inline-block;animation:blink 1s infinite}
+#liveBadge i{width:18px;height:18px;background:#fff;border-radius:50%;display:inline-block;animation:blink 1s infinite}
 @keyframes blink{50%{opacity:.2}}
-#slideNo{font-size:24px;font-weight:700;margin-top:6px;color:#33477a}
-/* CATEGORY BANNER */
-#catbar{margin:8px 48px 0;display:flex;align-items:center;gap:20px}
-#catTx{flex:1;min-width:0}
-#catOver{font-size:19px;font-weight:800;letter-spacing:3px;color:var(--gold2)}
-#catbar h2{font-size:42px;font-weight:800;line-height:1.15;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:titleIn .5s ease both}
-@keyframes titleIn{from{opacity:0;transform:translateX(-50px)}}
-#catU{height:5px;margin-top:6px;border-radius:99px;background:linear-gradient(90deg,var(--red),var(--gold),var(--green));transform-origin:left;animation:uGrow .7s ease both}
-@keyframes uGrow{from{transform:scaleX(0)}}
-.pill{font-size:20px;font-weight:800;padding:7px 20px;border-radius:999px;white-space:nowrap;background:#fff;box-shadow:0 3px 10px rgba(10,20,60,.1)}
-.pill.seat{color:#0a6a35;border:3px solid var(--green);background:#e7f8ee}
-.pill.cand{color:#1e2f8f;border:3px solid #3b5bff;background:#eef2ff}
-.pill.vote{color:#b3121a;border:3px solid var(--red);background:#fff1f1;animation:pulse 2s infinite}
-.pill.cast{color:#92400e;border:3px solid var(--gold);background:#fff8e1}
-/* LIST — white cards + combined colors */
+#slideNo{font-size:26px;font-weight:700;margin-top:6px;opacity:.95;color:#33477a}
+/* CATEGORY BAR */
+#catbar{margin:12px 48px 0;background:rgba(255,255,255,.97);border-radius:22px;border-left:14px solid #d21f26;padding:14px 28px;display:flex;align-items:center;gap:22px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+#catbar h2{font-size:40px;font-weight:800;color:#102a7a;line-height:1.15;flex:1;animation:titleIn .5s ease both}
+@keyframes titleIn{from{opacity:0;transform:translateX(-40px)}}
+.pill{font-size:22px;font-weight:800;padding:8px 22px;border-radius:999px;white-space:nowrap}
+.pill.seat{background:#e7f8ee;color:#0a6a35;border:3px solid #0a7a3d}
+.pill.cand{background:#eef2ff;color:#1e2f8f;border:3px solid #1e2f8f}
+.pill.vote{background:#fff1f1;color:#b3121a;border:3px solid #d21f26;animation:pulse 2s infinite}
+.pill.cast{background:#fff8e1;color:#92400e;border:3px solid #f5b301}
+/* LIST */
 #list{flex:1;margin:12px 48px 0;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;min-height:0}
-.row{background:#fff;border:3px solid #dbe3f5;border-radius:18px;display:flex;align-items:center;gap:20px;padding:10px 24px 10px 12px;position:relative;overflow:hidden;box-shadow:0 5px 16px rgba(10,20,60,.1);animation:rowIn .55s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
+.row{background:#fff;border-radius:18px;display:flex;align-items:center;gap:20px;padding:10px 24px 10px 12px;box-shadow:0 4px 14px rgba(10,20,60,.12);border:4px solid transparent;position:relative;overflow:hidden;animation:rowIn .55s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
 @keyframes rowIn{from{opacity:0;transform:translateX(90px) scale(.97)}}
-.row.lead{border-color:var(--green);background:linear-gradient(90deg,#f0fdf4,#fff);box-shadow:0 0 20px rgba(10,122,61,.3)}
-.row .rank{min-width:68px;height:68px;border-radius:50%;background:var(--navy);color:#fff;font-size:32px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.row.lead .rank{background:var(--green)}
-.row img,.row .av{width:78px;height:78px;border-radius:50%;object-fit:cover;background:#dbe3f5;flex-shrink:0;border:3px solid #dbe3f5}
-.row.lead img,.row.lead .av{border-color:var(--green)}
-.row .av{display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
+.row.lead{border-color:#0a7a3d;background:linear-gradient(90deg,#f0fdf4,#fff)}
+.row .rank{min-width:68px;height:68px;border-radius:50%;background:#102a7a;color:#fff;font-size:34px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.row.lead .rank{background:#0a7a3d}
+.row img,.row .av{width:78px;height:78px;border-radius:15px;object-fit:cover;background:#dbe3f5;flex-shrink:0}
+.row .av{display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#fff;background:linear-gradient(135deg,#102a7a,#0a7a3d)}
 .row .nm{flex:1;min-width:0}
-.row .nm b{font-size:31px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mv{font-size:21px;font-weight:800;margin-left:10px}
+.row .nm b{font-size:32px;font-weight:800;line-height:1.15;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv{font-size:22px;font-weight:800;margin-left:10px}
 .mv.up{color:#0a7a3d}.mv.dn{color:#d21f26}.mv.same{color:#98a2c3}
-.row .bar{position:absolute;left:0;bottom:0;height:8px;background:#e7ecf6;width:100%}
-.row .bar i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,#d21f26,#3b5bff);animation:barGrow 1.1s ease both}
-.row.lead .bar i{background:linear-gradient(90deg,var(--green),#22c55e)}
+.row .bar{position:absolute;left:0;bottom:0;height:9px;background:#e7ecf6;width:100%}
+.row .bar i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,#d21f26,#f5b301,#3b82f6);animation:barGrow 1.1s ease both}
+.row.lead .bar i{background:linear-gradient(90deg,#0a7a3d,#22c55e)}
 @keyframes barGrow{from{width:0}}
-.row .vt{text-align:right;min-width:205px}
-.row .vt b{font-size:44px;font-weight:800;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
-.row.lead .vt b{color:var(--green)}
-.row .vt span{font-size:19px;color:var(--mut);font-weight:700}
-.winTag{font-size:19px;font-weight:800;background:#e7f8ee;color:#0a6a35;border:2px solid var(--green);border-radius:999px;padding:2px 14px;margin-left:12px;vertical-align:middle;white-space:nowrap}
-/* WINNER */
-.row.won{border-color:var(--gold);background:linear-gradient(90deg,#fffbe6,#fff);box-shadow:0 0 28px rgba(245,179,1,.6)}
-.row.won::after{content:'';position:absolute;top:0;bottom:0;width:130px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.9),transparent);animation:sheen 2.6s ease-in-out infinite}
+.row .vt{text-align:right;min-width:210px}
+.row .vt b{font-size:46px;font-weight:800;color:#102a7a;line-height:1;font-variant-numeric:tabular-nums}
+.row.lead .vt b{color:#0a6a35}
+.row .vt span{font-size:20px;color:#66739a;font-weight:700}
+.winTag{font-size:20px;font-weight:800;background:#fef3c7;color:#92400e;border:2px solid #f5b301;border-radius:999px;padding:2px 14px;margin-left:12px;vertical-align:middle;white-space:nowrap}
+/* WINNER (निर्विरोध) — golden victory card */
+.row.won{border-color:#f5b301;background:linear-gradient(90deg,#fffbe6,#fff7d6,#fff);box-shadow:0 0 28px rgba(245,179,1,.55)}
+.row.won::after{content:'';position:absolute;top:0;bottom:0;width:130px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.8),transparent);animation:sheen 2.6s ease-in-out infinite}
 @keyframes sheen{from{left:-150px}to{left:110%}}
-.row.won .rank{background:linear-gradient(135deg,#f5b301,#ff8a00);font-size:36px}
-.row.won .vt b{color:var(--gold2)}
+.row.won .rank{background:linear-gradient(135deg,#f5b301,#ff8a00);font-size:38px}
+.row.won .vt b{color:#b45309}
 .row.won .bar i{background:linear-gradient(90deg,#f5b301,#ff8a00)}
-.winTag.big{font-size:24px;background:linear-gradient(90deg,#f5b301,#ffd34d);color:#4a3200;border:3px solid var(--gold2);animation:glow 1.2s infinite alternate}
-@keyframes glow{from{box-shadow:0 0 8px rgba(245,179,1,.5)}to{box-shadow:0 0 26px rgba(245,179,1,.95)}}
-/* DUEL */
-#list.duel{flex-direction:row;align-items:stretch;gap:28px;justify-content:center}
-.duelCard{flex:1;max-width:760px;background:#fff;border:3px solid #dbe3f5;border-radius:28px;display:flex;flex-direction:column;align-items:center;padding:30px 30px 26px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(10,20,60,.14);animation:rowIn .6s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
-.duelCard.lead{border-color:var(--green);box-shadow:0 0 36px rgba(10,122,61,.35)}
-.duelCard img,.duelCard .av{width:210px;height:210px;border-radius:50%;object-fit:cover;border:6px solid #dbe3f5;box-shadow:0 10px 26px rgba(0,0,0,.2)}
-.duelCard.lead img{border-color:var(--green)}
-.duelCard .av{display:flex;align-items:center;justify-content:center;font-size:100px;font-weight:800;color:#fff;background:linear-gradient(135deg,#3b5bff,#0a7a3d)}
-.duelCard h3{font-size:44px;font-weight:800;margin-top:16px;text-align:center;line-height:1.2;color:var(--navy)}
-.duelCard .vv{font-size:80px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.1}
-.duelCard.lead .vv{color:var(--green)}
-.duelCard .pp{font-size:24px;color:var(--mut);font-weight:700}
-.duelCard .dbar{width:100%;height:14px;background:#e7ecf6;border-radius:99px;margin-top:14px;overflow:hidden}
-.duelCard .dbar i{display:block;height:100%;background:linear-gradient(90deg,#d21f26,#3b5bff);animation:barGrow 1.2s ease both}
-.duelCard.lead .dbar i{background:linear-gradient(90deg,var(--green),#22c55e)}
-#vsBadge{align-self:center;min-width:126px;height:126px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffd34d,#b45309);color:#fff;font-size:50px;font-weight:800;display:flex;align-items:center;justify-content:center;border:5px solid #fff;box-shadow:0 0 36px rgba(245,179,1,.7);animation:pulse 1.6s infinite;z-index:2}
-#marginLine{text-align:center;font-size:26px;font-weight:800;color:var(--green);margin-top:4px}
-/* TICKER + BOTTOM — deep navy bands */
-#ticker{height:42px;margin:8px 48px 0;background:linear-gradient(90deg,#0a1330,#1a2a6e,#0a1330);border-radius:14px;overflow:hidden;white-space:nowrap;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.winTag.big{font-size:26px;background:linear-gradient(90deg,#f5b301,#ffd34d);color:#5a3c00;border:3px solid #b45309;box-shadow:0 0 14px rgba(245,179,1,.7);animation:glow 1.2s infinite alternate}
+@keyframes glow{from{box-shadow:0 0 8px rgba(245,179,1,.5)}to{box-shadow:0 0 24px rgba(245,179,1,.95)}}
+/* TICKER */
+#ticker{height:42px;margin:8px 48px 0;background:rgba(11,21,48,.95);border-radius:14px;overflow:hidden;white-space:nowrap;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 #tickTxt{display:inline-block;padding-left:100%;animation:tick 30s linear infinite;font-size:22px;font-weight:700;color:#ffe9a8}
 @keyframes tick{to{transform:translateX(-100%)}}
-#bottom{height:78px;margin:10px 48px 14px;background:linear-gradient(90deg,#0a1330,#1a2a6e,#0a1330);border-radius:18px;display:flex;align-items:center;gap:16px;padding:0 24px;color:#fff}
-#prog{flex:1;height:14px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+/* BOTTOM */
+#bottom{height:80px;margin:10px 48px 14px;background:rgba(11,21,48,.95);border-radius:18px;display:flex;align-items:center;gap:16px;padding:0 24px;color:#fff}
+#prog{flex:1;height:14px;background:#2a3a6e;border-radius:99px;overflow:hidden}
 #prog i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#d21f26,#f5b301,#22c55e);box-shadow:0 0 12px rgba(245,179,1,.8)}
-#bottom .t{font-size:20px;font-weight:700;white-space:nowrap;color:#dbe3ff}
+#bottom .t{font-size:20px;font-weight:700;white-space:nowrap}
 #bottom select,#bottom button{font-size:18px;font-weight:700;padding:8px 14px;border-radius:10px;border:none;font-family:inherit}
 #bottom select{max-width:360px}
-#bottom button{background:#243a8f;color:#fff;cursor:pointer}
+#bottom button{background:#243a8f;color:#fff;cursor:pointer;transition:.15s}
+#bottom button:hover{filter:brightness(1.25)}
 #bottom button.g{background:#0a7a3d}
 body.obs #bottom .hideobs{display:none!important}
 /* flower shower */
 #petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:200}
 .petal{position:absolute;top:-90px;animation-name:petalFall;animation-timing-function:linear;animation-fill-mode:forwards}
 @keyframes petalFall{to{transform:translateY(1200px) rotate(540deg)}}
-/* VICTORY CELEBRATION — bright festive */
-#celebrate{position:absolute;inset:0;z-index:300;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;background:radial-gradient(800px 500px at 50% 38%,rgba(245,179,1,.4),transparent 70%),linear-gradient(180deg,#fffdf4,#fff);opacity:0;transition:opacity .6s}
-#celebrate.show{display:flex;opacity:1}
-#celebrate .tro{font-size:150px;animation:bounce 1s ease infinite alternate;filter:drop-shadow(0 10px 20px rgba(245,179,1,.6))}
-@keyframes bounce{to{transform:translateY(-24px) scale(1.06)}}
-#celebrate .w1{font-size:44px;font-weight:800;letter-spacing:8px;color:var(--gold2);margin-top:6px}
-#celebrate img,#celebrate .av{width:250px;height:250px;border-radius:50%;object-fit:cover;border:8px solid var(--gold);box-shadow:0 0 60px rgba(245,179,1,.8);margin-top:18px;background:#fff}
-#celebrate .av{display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:800;color:#fff;background:linear-gradient(135deg,#d21f26,#3b5bff)}
-#celebrate .wn{font-size:76px;font-weight:800;margin-top:16px;color:var(--navy)}
-#celebrate .wc{font-size:34px;color:var(--mut);font-weight:700;margin-top:6px}
-#celebrate .wt{font-size:44px;font-weight:800;color:var(--gold2);margin-top:14px;animation:pulse 1.2s infinite}
 </style>
 </head>
 <body>
@@ -135,11 +104,11 @@ body.obs #bottom .hideobs{display:none!important}
   <div id="fx"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
   <div id="top">
     <div id="logo">🌳</div>
-    <div><h1>नेपाली कांग्रेस <em>• १५औं महाधिवेशन</em></h1><p id="subLine">केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
+    <div><h1>नेपाली कांग्रेस • १५औं महाधिवेशन</h1><p id="subLine">केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count</p></div>
     <div id="liveBox"><div id="liveBadge"><i></i>LIVE</div><div id="slideNo">1 / 80</div></div>
   </div>
   <div id="catbar">
-    <div id="catTx"><div id="catOver">—</div><h2 id="catTitle">—</h2><div id="catU"></div></div>
+    <h2 id="catTitle">—</h2>
     <span class="pill seat" id="seatPill">—</span>
     <span class="pill cand" id="candPill">—</span>
     <span class="pill vote" id="votePill">—</span>
@@ -157,20 +126,28 @@ body.obs #bottom .hideobs{display:none!important}
     <a href="admin.html" target="_blank" class="hideobs" style="color:#f5b301;font-size:18px;font-weight:800;text-decoration:none">⚙ Admin</a>
   </div>
   <div id="petals"></div>
-  <div id="celebrate"><div class="tro">🏆</div><div class="w1">★ विजयी घोषणा ★</div><div id="celPh"></div><div class="wn" id="celName">—</div><div class="wc" id="celCat">—</div><div class="wt">🎉 निर्विरोध निर्वाचित 🎉</div></div>
 </div></div>
 
 <script>
-function fit(){const sc=Math.min(innerWidth/1920,innerHeight/1080);document.getElementById('stage').style.transform=`scale(${sc})`;}
-addEventListener('resize',fit);fit();
-(function(){const fx=document.getElementById('fx');
-  const cols=['#f5b301','#d21f26','#3b5bff','#0a7a3d'];
-  for(let i=0;i<22;i++){const s=document.createElement('span');s.className='sp';const sz=4+Math.random()*7;
-    s.style.cssText=`left:${Math.random()*1920}px;top:${300+Math.random()*780}px;width:${sz}px;height:${sz}px;background:${cols[i%4]};opacity:.55;animation-duration:${6+Math.random()*9}s;animation-delay:${Math.random()*8}s`;
-    fx.appendChild(s);}})();
-
+// ---- fit 16:9 stage to window ----
+function fit(){
+  const s=1920,h=1080;
+  const sc=Math.min(innerWidth/s,innerHeight/h);
+  document.getElementById('stage').style.transform=`scale(${sc})`;
+}
+addEventListener('resize',fit); fit();
+// ambient sparkles
+(function(){
+  const fx=document.getElementById('fx');
+  for(let i=0;i<22;i++){
+    const s=document.createElement('span');s.className='sp';
+    const sz=3+Math.random()*6;
+    s.style.cssText=`left:${Math.random()*1920}px;top:${300+Math.random()*780}px;width:${sz}px;height:${sz}px;background:${['#f5b301','#d21f26','#3b5bff','#0a7a3d'][i%4]};opacity:.6;animation-duration:${6+Math.random()*9}s;animation-delay:${Math.random()*8}s`;
+    fx.appendChild(s);
+  }
+})();
 const qs=new URLSearchParams(location.search);
-const PER=parseInt(qs.get('per')||'6',10)||6;
+const PER=parseInt(qs.get('per')||'6',10)||6; // rows per screen — fits exact 1080p
 let intervalSec=parseInt(qs.get('interval')||'12',10)||12;
 let playing=qs.get('play')!=='0';
 let votes={};
@@ -178,9 +155,11 @@ try{Object.assign(votes,JSON.parse(localStorage.getItem('nc_votes')||'{}'))}catc
 async function loadRemote(){
   try{const r=await fetch('votes.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const j=await r.json();const hasLocal=!!localStorage.getItem('nc_votes');for(const k in j){if(!hasLocal)votes[k]=j[k];else votes[k]=Math.max(votes[k]||0,j[k]);}}}catch(e){}
 }
+// group categories
 const cats=[];const map=new Map();
 for(const c of CANDIDATES){if(!map.has(c.cat))map.set(c.cat,{cat:c.cat,seats:c.seats||1,cands:[]});map.get(c.cat).cands.push(c);}
 for(const v of map.values())cats.push(v);
+// build pages: each page = one screen (max PER rows)
 let pages=[];
 function buildPages(){
   pages=[];
@@ -192,10 +171,12 @@ function buildPages(){
 }
 let pi=parseInt(qs.get('slide')||'0',10)||0;
 const $=id=>document.getElementById(id);
+// निर्वाचन समिति आधिकारिक तथ्यांक: ७,२५५ प्रतिनिधिमध्ये ७,०३९ मत
 const DELEGATES=7255, VOTES_CAST=7039;
 const TURNOUT_PCT=(VOTES_CAST/DELEGATES*100).toFixed(2);
 $('subLine').textContent=`केन्द्रीय कार्यसमिति निर्वाचन — Live Vote Count • ${DELEGATES.toLocaleString()} प्रतिनिधि • ${VOTES_CAST.toLocaleString()} मत (${TURNOUT_PCT}% मतदान)`;
-const lastVotes={};const lastOrder={};let lastSlideKey='';let lastCelebKey='';
+// animation state
+const lastVotes={};const lastOrder={};let lastSlideKey='';
 function countUp(elm,from,to){
   if(from===to){elm.textContent=to.toLocaleString();return;}
   const t0=performance.now(),d=900;
@@ -203,62 +184,54 @@ function countUp(elm,from,to){
     elm.textContent=Math.round(from+(to-from)*e).toLocaleString();
     if(p<1)requestAnimationFrame(f);})(t0);
 }
-function renderSel(){$('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat} (${c.cands.length})</option>`).join('');}
-const initials=n=>(n||'?').trim().charAt(0);
+function renderSel(){
+  $('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat} (${c.cands.length})</option>`).join('');
+}
 function render(){
   if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
   const pg=pages[pi],c=cats[pg.catIdx];
   const slideKey=pg.catIdx+'-'+pg.page;
   $('catSel').value=pg.catIdx;
+  // retrigger title animation
   const ct=$('catTitle');ct.style.animation='none';void ct.offsetWidth;ct.style.animation='';
-  const cu=$('catU');cu.style.animation='none';void cu.offsetWidth;cu.style.animation='';
-  $('catOver').textContent=`पद-समूह ${pg.catIdx+1} / ${cats.length}${pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:''}${c.cands.some(x=>x.unopposed)?' 🏆':''}`;
-  ct.textContent=(pg.catIdx+1)+'. '+pg.cat;
+  ct.textContent=(pg.catIdx+1)+'. '+pg.cat+(c.cands.some(x=>x.unopposed)?' 🏆':'');
   $('seatPill').textContent=pg.seats+' पद';
   $('candPill').textContent=c.cands.length+' उम्मेदवार';
   const total=c.cands.reduce((a,x)=>a+(votes[x.id]||0),0);
   $('votePill').textContent='जम्मा '+total.toLocaleString()+' भोट';
-  (function(){const elm=$('castPill'),to=VOTES_CAST,t0=performance.now(),d=1400;
+  // grand total cast counter — ticks up live on every slide
+  (function(){
+    const elm=$('castPill'),to=VOTES_CAST,t0=performance.now(),d=1400;
     (function f(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);
       elm.textContent=`🗳️ ${Math.round(to*e).toLocaleString()} मत खस्यो`;
-      if(p<1)requestAnimationFrame(f);})(t0);})();
+      if(p<1)requestAnimationFrame(f);})(t0);
+  })();
   $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
   $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?'अग्रता: '+(pg.full[0]?pg.full[0].name:'—'):'मतगणना बाँकी'}`;
-  const listEl=$('list');
-  if(c.cands.length<=2&&pg.totalPages===1){
-    listEl.classList.add('duel');
-    const mx=Math.max(1,...pg.full.map(x=>votes[x.id]||0));
-    const w=pg.full[0]?votes[pg.full[0].id]||0:0, r=pg.full[1]?votes[pg.full[1].id]||0:0;
-    const card=(x,i)=>{const v=votes[x.id]||0,pct=Math.round(v/mx*100),isL=total>0&&i===0;
-      const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
-      return `<div class="duelCard ${isL?'lead':''}" style="--d:${i*140}ms">${ph}<h3>${x.ballot}. ${x.name}${x.unopposed?' 🏆':''}</h3>
-      <div class="vv" data-vid="${x.id}" data-v="${v}">0</div><div class="pp">भोट • ${pct}%${x.unopposed?' • 🎉 विजयी':''}</div>
-      <div class="dbar"><i style="--w:${x.unopposed?100:pct}%"></i></div></div>`;};
-    listEl.innerHTML=card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')
-      +((total>0&&pg.full[1])?`<div id="marginLine"></div>`:'');
-    const ml=$('marginLine');
-    if(ml)ml.textContent=`⚡ ${pg.full[0].name} ${Math.abs(w-r).toLocaleString()} मतले अगाडि`;
-  }else{
-    listEl.classList.remove('duel');
-    const mx=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
-    const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
-    const prev=lastOrder[pg.catIdx]||[];
-    listEl.innerHTML=pg.list.map((x,i)=>{
-      const v=votes[x.id]||0,pct=Math.round(v/mx*100),r=rankOf(x.id);
-      const lead=total>0&&r<=pg.seats, won=!!x.unopposed;
-      let mv='';
-      if(total>0&&prev.length){const o=prev.indexOf(x.id);
-        if(o===-1||o===r-1)mv='<span class="mv same">•</span>';
-        else if(o>r-1)mv=`<span class="mv up">▲${o-(r-1)}</span>`;
-        else mv=`<span class="mv dn">▼${(r-1)-o}</span>`;}
-      const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
-      const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
-        :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b><br><span>भोट • ${pct}%</span></div>`;
-      return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
-      <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
-      ${vt}<div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
-    }).join('');
-  }
+  const max=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
+  const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
+  const prev=lastOrder[pg.catIdx]||[];
+  $('list').innerHTML=pg.list.map((x,i)=>{
+    const v=votes[x.id]||0,pct=Math.round(v/max*100),r=rankOf(x.id);
+    const lead=total>0&&r<=pg.seats;
+    const won=!!x.unopposed;
+    let mv='';
+    if(total>0&&prev.length){
+      const o=prev.indexOf(x.id);
+      if(o===-1)mv='<span class="mv same">•</span>';
+      else if(o===r-1)mv='<span class="mv same">•</span>';
+      else if(o>r-1)mv=`<span class="mv up">▲${o-(r-1)}</span>`;
+      else mv=`<span class="mv dn">▼${(r-1)-o}</span>`;
+    }
+    const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${(x.name||'?').trim().charAt(0)}</div>'">`:`<div class="av">${(x.name||'?').trim().charAt(0)}</div>`;
+    const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
+      :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b><br><span>भोट • ${pct}%</span></div>`;
+    return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
+    <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+    ${vt}
+    <div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
+  }).join('');
+  // count-up animation
   document.querySelectorAll('#list [data-vid]').forEach(b=>{
     const id=b.dataset.vid,to=+b.dataset.v;
     const from=(slideKey===lastSlideKey)?(lastVotes[id]||0):0;
@@ -266,13 +239,15 @@ function render(){
   });
   lastSlideKey=slideKey;
   if(total>0)lastOrder[pg.catIdx]=pg.full.map(x=>x.id);
+  // ticker: turnout + hottest races
   const hot=[...cats].map(cc=>({cc,t:cc.cands.reduce((a,x)=>a+(votes[x.id]||0),0)}))
     .filter(o=>o.t>0).sort((a,b)=>b.t-a.t).slice(0,3)
     .map(o=>{const f=[...o.cc.cands].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));return `${o.cc.cat.split('(')[0].trim()}: ${f[0].name} ${votes[f[0].id].toLocaleString()} 🥇`;}).join(' • ');
   $('tickTxt').textContent=`🌳 नेपाली कांग्रेस १५औं महाधिवेशन • निर्वाचन समिति: ${DELEGATES.toLocaleString()} प्रतिनिधिमध्ये ${VOTES_CAST.toLocaleString()} मत (${TURNOUT_PCT}% मतदान)${hot?' • 🔥 '+hot:''} • `;
+  // flower shower for निर्विरोध winners
   if(pg.list.some(x=>x.unopposed))startPetals();else stopPetals();
-  if(slideKey!==lastCelebKey){lastCelebKey=slideKey;const w=pg.list.find(x=>x.unopposed);if(w)celebrate(w,pg.cat);}
 }
+// ---- flower shower ----
 let petalTimer=null;
 function stopPetals(){if(petalTimer){clearInterval(petalTimer);petalTimer=null;}const b=$('petals');if(b)b.innerHTML='';}
 function startPetals(){
@@ -280,38 +255,24 @@ function startPetals(){
   const box=$('petals');if(!box)return;
   const flowers=['🌸','🌺','🌼','🌷','💮','🏵️','🌹','🌻'];
   petalTimer=setInterval(()=>{
-    const s=document.createElement('span');s.className='petal';
+    const s=document.createElement('span');
+    s.className='petal';
     s.textContent=flowers[Math.floor(Math.random()*flowers.length)];
     s.style.left=(Math.random()*1850)+'px';
     s.style.fontSize=(28+Math.random()*40)+'px';
     s.style.animationDuration=(4+Math.random()*3.5)+'s';
-    box.appendChild(s);setTimeout(()=>s.remove(),8000);
+    box.appendChild(s);
+    setTimeout(()=>s.remove(),8000);
     if(box.children.length>90)box.firstChild.remove();
   },220);
 }
-let celebTimer=null;
-function celebrate(w,cat){
-  hideCeleb(true);
-  $('celPh').innerHTML=w.photo?`<img src="${w.photo}" onerror="this.outerHTML='<div class=av>${initials(w.name)}</div>'">`:`<div class="av">${initials(w.name)}</div>`;
-  $('celName').textContent=w.name;
-  $('celCat').textContent=cat;
-  $('celebrate').classList.add('show');
-  startPetals();
-  celebTimer=setTimeout(()=>hideCeleb(),4500);
-}
-function hideCeleb(instant){
-  if(celebTimer){clearTimeout(celebTimer);celebTimer=null;}
-  const c=$('celebrate');if(!c)return;
-  if(instant){c.classList.remove('show');return;}
-  c.style.opacity='0';setTimeout(()=>{c.classList.remove('show');c.style.opacity='';},600);
-}
 let el=0;
 setInterval(()=>{if(!playing)return;el+=0.2;$('progBar').style.width=Math.min(100,el/intervalSec*100)+'%';if(el>=intervalSec){el=0;pi++;render();}},200);
-function go(d){el=0;hideCeleb(true);if(d===1||d===-1){pi+=d;render();}else{pi=pages.findIndex(p=>p.catIdx===d&&p.page===0);if(pi<0)pi=0;render();}}
+function go(d){el=0;if(d===1||d===-1){pi+=d;render();}else{pi=pages.findIndex(p=>p.catIdx===d&&p.page===0);if(pi<0)pi=0;render();}}
 function tog(){playing=!playing;el=0;$('playBtn').textContent=playing?'⏸':'▶';}
 $('prevBtn').onclick=()=>go(-1);$('nextBtn').onclick=()=>go(1);$('playBtn').onclick=tog;
 $('catSel').onchange=e=>{go(parseInt(e.target.value,10));};
-document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key===' '){e.preventDefault();tog();}if(e.key==='Escape')hideCeleb();});
+document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key===' '){e.preventDefault();tog();}});
 if(qs.get('obs')==='1')document.body.classList.add('obs');
 window.addEventListener('storage',e=>{if(e.key==='nc_votes'){try{votes=JSON.parse(localStorage.getItem('nc_votes')||'{}')}catch(_){}buildPages();render();}});
 buildPages();renderSel();render();
