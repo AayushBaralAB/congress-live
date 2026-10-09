@@ -54,6 +54,15 @@ code{background:#eef;padding:2px 6px;border-radius:6px}
 <button class="y" id="randomFill">🎲 Random भर्नुहोस्</button>
 <button class="y" id="randomAll">🎲 सबै (811) मा Random</button>
 </div>
+<div class="row" style="margin-top:10px">
+<span style="font-size:13px;font-weight:700">⏱ Auto:</span>
+<button class="g" id="autoBtn">▶ Auto सुरु</button>
+<span style="font-size:13px">हरेक</span>
+<input id="autoSec" type="number" value="5" min="2" style="width:70px" title="Seconds">
+<span style="font-size:13px">s मा +0–</span>
+<input id="autoStep" type="number" value="5" min="1" style="width:70px" title="Max votes per tick">
+<span style="font-size:13px">भोट (यो समूहमा auto थपिने)</span>
+</div>
 <div class="hint">💡 <b>OBS मा live देखाउने तरिका:</b> 1) यो पेजमा भोट हालेर <b>Save</b> गर्नुहोस् → 2) <b>Export votes.json</b> गरेर यही folder मा replace गर्नुहोस् (वा एउटै Chrome मा display + admin खोलेर राख्नुहोस् – auto sync हुन्छ) → 3) OBS → Sources + → Browser → URL = <code>file:///D:/Nepali Congress/voting-result/index.html?obs=1</code> → Width 1920 Height 1080 → OK. अर्को विकल्प: <code>npx serve .</code> गरेर <code>http://localhost:3000/index.html?obs=1</code> प्रयोग गर्नुहोस्।</div>
 </div>
 
@@ -120,6 +129,21 @@ document.getElementById('randomAll').onclick=()=>{
   if(mx<mn){const t=mn;mn=mx;mx=t;}
   CANDIDATES.forEach(c=>{votes[c.id]=mn+Math.floor(Math.random()*(mx-mn+1));});
   localStorage.setItem('nc_votes',JSON.stringify(votes));render();alert(`Random ${mn}–${mx} votes filled for ALL ${CANDIDATES.length} candidates!`);
+};
+let autoTimer=null;
+document.getElementById('autoBtn').onclick=e=>{
+  if(autoTimer){clearTimeout(autoTimer);autoTimer=null;e.target.textContent='▶ Auto सुरु';return;}
+  e.target.textContent='⏸ Auto रोक्नुहोस्';
+  const loop=()=>{
+    if(!autoTimer)return;
+    const step=Math.max(1,parseInt(document.getElementById('autoStep').value||'5',10));
+    const sec=Math.max(2,parseInt(document.getElementById('autoSec').value||'5',10));
+    const cat=cats[qi];
+    CANDIDATES.filter(c=>c.cat===cat).forEach(c=>{votes[c.id]=(votes[c.id]||0)+Math.floor(Math.random()*(step+1));});
+    localStorage.setItem('nc_votes',JSON.stringify(votes));render();
+    autoTimer=setTimeout(loop,sec*1000);
+  };
+  autoTimer=setTimeout(loop,100);
 };
 document.getElementById('reset').onclick=()=>{if(confirm('सबै भोट 0 गर्ने?')){votes={};localStorage.setItem('nc_votes','{}');render();}};
 render();
