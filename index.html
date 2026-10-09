@@ -51,6 +51,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 .pill.cand{color:#1e2f8f;border:3px solid #3b5bff;background:#eef2ff}
 .pill.vote{color:#b3121a;border:3px solid var(--red);background:#fff1f1;animation:pulse 2s infinite}
 .pill.cast{color:#92400e;border:3px solid var(--gold);background:#fff8e1}
+.pill.bad{color:#b3121a;border:3px dashed #d21f26;background:#fff}
 /* LIST — white cards + combined colors */
 #list{flex:1;margin:12px 48px 0;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;min-height:0}
 .row{background:#fff;border:3px solid #dbe3f5;border-radius:18px;display:flex;align-items:center;gap:20px;padding:10px 24px 10px 12px;position:relative;overflow:hidden;box-shadow:0 5px 16px rgba(10,20,60,.1);animation:rowIn .55s cubic-bezier(.2,.9,.25,1.15) both;animation-delay:var(--d,0ms)}
@@ -157,6 +158,7 @@ body.bigtext .duelCard img,body.bigtext .duelCard .av{width:260px;height:260px}
     <span class="pill cand" id="candPill">—</span>
     <span class="pill vote" id="votePill">—</span>
     <span class="pill cast" id="castPill">—</span>
+    <span class="pill bad" id="badPill" style="display:none">—</span>
   </div>
   <div id="list"></div>
   <div id="ticker"><span id="tickTxt">🌳 नेपाली कांग्रेस १५औं महाधिवेशन •</span></div>
@@ -236,6 +238,8 @@ function render(){
   $('candPill').textContent=c.cands.length+' उम्मेदवार';
   const total=c.cands.reduce((a,x)=>a+(votes[x.id]||0),0);
   $('votePill').textContent='जम्मा '+total.toLocaleString()+' भोट';
+  const bad=(votes.INVALID&&votes.INVALID[pg.cat])||0;
+  const bp=$('badPill');bp.style.display=bad>0?'':'none';if(bad>0)bp.textContent='❌ बदर मत: '+bad.toLocaleString();
   (function(){const elm=$('castPill'),to=VOTES_CAST,t0=performance.now(),d=1400;
     (function f(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);
       elm.textContent=`🗳️ ${Math.round(to*e).toLocaleString()} मत खस्यो`;
