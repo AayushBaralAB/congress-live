@@ -112,6 +112,19 @@ html,body{width:100%;height:100%;background:#000;font-family:'Noto Sans Devanaga
 #bottom button{background:#243a8f;color:#fff;cursor:pointer}
 #bottom button.g{background:#0a7a3d}
 body.obs #bottom .hideobs{display:none!important}
+/* BIG TEXT mode (OBS: ?text=big) */
+body.bigtext #catbar h2{font-size:46px}
+body.bigtext #list{gap:8px}
+body.bigtext .row{gap:18px}
+body.bigtext .row img,body.bigtext .row .av{width:92px;height:92px}
+body.bigtext .row .av{font-size:48px}
+body.bigtext .row .nm b{font-size:42px}
+body.bigtext .row .vt{min-width:250px}
+body.bigtext .row .vt b{font-size:64px}
+body.bigtext .row .rank{min-width:78px;height:78px;font-size:40px}
+body.bigtext .duelCard h3{font-size:60px}
+body.bigtext .duelCard .vv{font-size:108px}
+body.bigtext .duelCard img,body.bigtext .duelCard .av{width:260px;height:260px}
 /* flower shower */
 #petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:200}
 .petal{position:absolute;top:-90px;animation-name:petalFall;animation-timing-function:linear;animation-fill-mode:forwards}
@@ -151,6 +164,7 @@ body.obs #bottom .hideobs{display:none!important}
     <div id="prog"><i id="progBar"></i></div>
     <span class="t" id="pageInfo">—</span>
     <select id="catSel" class="hideobs"></select>
+    <select id="textSel" class="hideobs" title="Text size"><option value="">Text: Normal</option><option value="big">Text: Big (OBS)</option></select>
     <button id="prevBtn" class="hideobs">◀</button>
     <button id="playBtn" class="g">⏸</button>
     <button id="nextBtn" class="hideobs">▶</button>
@@ -314,6 +328,8 @@ $('prevBtn').onclick=()=>go(-1);$('nextBtn').onclick=()=>go(1);$('playBtn').oncl
 $('catSel').onchange=e=>{go(parseInt(e.target.value,10));};
 document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key===' '){e.preventDefault();tog();}if(e.key==='Escape')hideCeleb();});
 if(qs.get('obs')==='1')document.body.classList.add('obs');
+if(qs.get('text')==='big'){document.body.classList.add('bigtext');$('textSel').value='big';}
+$('textSel').onchange=e=>{document.body.classList.toggle('bigtext',e.target.value==='big');};
 window.addEventListener('storage',e=>{if(e.key==='nc_votes'){try{votes=JSON.parse(localStorage.getItem('nc_votes')||'{}')}catch(_){}buildPages();render();}});
 buildPages();renderSel();render();
 $('playBtn').textContent=playing?'⏸':'▶';
