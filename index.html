@@ -233,7 +233,7 @@ function render(){
     const card=(x,i)=>{const v=votes[x.id]||0,pct=Math.round(v/mx*100),isL=total>0&&i===0;
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
       return `<div class="duelCard ${isL?'lead':''}" style="--d:${i*140}ms">${ph}<h3>${x.ballot}. ${x.name}${x.unopposed?' 🏆':''}</h3>
-      <div class="vv" data-vid="${x.id}" data-v="${v}">0</div><div class="pp">भोट • ${pct}%${x.unopposed?' • 🎉 विजयी':''}</div>
+      <div class="vv" data-vid="${x.id}" data-v="${v}">0</div>${x.unopposed?'<div class="pp">🎉 विजयी</div>':''}
       <div class="dbar"><i style="--w:${x.unopposed?100:pct}%"></i></div></div>`;};
     listEl.innerHTML=`<div class="duelRow">`+card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')+`</div>`
       +((total>0&&pg.full[1])?`<div id="marginLine"></div>`:'');
@@ -255,7 +255,7 @@ function render(){
         else mv=`<span class="mv dn">▼${(r-1)-o}</span>`;}
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
       const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
-        :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b><br><span>भोट • ${pct}%</span></div>`;
+        :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b></div>`;
       return `<div class="row ${lead&&!won?'lead':''} ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
       <div class="nm"><b>${x.ballot}. ${x.name}${mv}${(lead&&!won)?(r===1?`<span class="winTag">👑 अग्रता +${mg.toLocaleString()}</span>`:'<span class="winTag">★ Leading</span>'):''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
       ${vt}<div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
