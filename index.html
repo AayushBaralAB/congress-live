@@ -242,7 +242,7 @@ function render(){
     const lv=pg.full[0]?(votes[pg.full[0].id]||0):0, sv=pg.full[1]?(votes[pg.full[1].id]||0):0, mg=lv-sv;
     listEl.innerHTML=pg.list.map((x,i)=>{
       const v=votes[x.id]||0,pct=Math.round(v/mx*100),r=rankOf(x.id);
-      const lead=total>0&&r<=pg.seats, won=!!x.unopposed;
+      const won=!!x.unopposed;
       let mv='';
       if(total>0&&prev.length){const o=prev.indexOf(x.id);
         if(o===-1||o===r-1)mv='<span class="mv same">•</span>';
@@ -252,7 +252,7 @@ function render(){
       const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
         :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b></div>`;
       return `<div class="row ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
-      <div class="nm"><b>${x.name}${mv}${(total>0&&r===1&&!won)?`<span class="winTag">अग्रता +${mg.toLocaleString()}</span>`:''}${(lead&&!won&&r!==1)?'<span class="winTag">★ Leading</span>':''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+      <div class="nm"><b>${x.name}${mv}${(total>0&&r===1&&!won)?`<span class="winTag">अग्रता +${mg.toLocaleString()}</span>`:''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
       ${vt}<div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
     }).join('');
   }
