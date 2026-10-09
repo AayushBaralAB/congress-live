@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Vote Entry | NC 15th Mahadhiveshan</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="candidates.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans Devanagari',sans-serif;background:#eef1f7;color:#16213a;padding:18px}
+.wrap{max-width:1100px;margin:auto}
+h1{font-size:22px;color:#102a7a}
+.card{background:#fff;border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select,input{padding:9px 12px;border:2px solid #d3d9e8;border-radius:10px;font-family:inherit;font-size:14px}
+select{flex:1;min-width:260px;font-weight:700}
+button{padding:9px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
+.b{background:#102a7a;color:#fff}.g{background:#0a7a3d;color:#fff}.r{background:#d21f26;color:#fff}.y{background:#f5b301}.d{background:#e4e9f4}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+th,td{padding:8px;border-bottom:1px solid #e5e9f3;text-align:left}
+th{background:#102a7a;color:#fff;position:sticky;top:0}
+img{width:44px;height:44px;border-radius:10px;object-fit:cover;background:#dbe3f5}
+input.vote{width:110px;font-weight:800;font-size:16px;color:#102a7a}
+.quick button{padding:4px 8px;font-size:12px;margin:1px}
+.hint{font-size:13px;color:#556;background:#fff8e1;border:1px solid #f5d67b;padding:10px;border-radius:10px;margin-top:10px}
+code{background:#eef;padding:2px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>⚙ Admin – भोट हाल्नुहोस् <small style="font-size:13px;color:#666">(811 उम्मेदवार • 80 समूह)</small></h1>
+<p style="font-size:13px;color:#445">Display: <a href="index.html" target="_blank">index.html खोल्नुहोस्</a> • OBS मा Browser Source → <code>index.html?obs=1&interval=12</code></p>
+
+<div class="card">
+<div class="row">
+<select id="cat"></select>
+<input id="q" placeholder="🔍 नाम खोज्नुहोस्" style="min-width:200px">
+</div>
+<div class="row" style="margin-top:10px">
+<button class="b" id="save">💾 Save (localStorage)</button>
+<button class="g" id="open">📺 Display खोल्नुहोस्</button>
+<button class="d" id="export">⬇ Export votes.json</button>
+<button class="d" id="importBtn">⬆ Import</button>
+<input type="file" id="import" accept=".json" style="display:none">
+<button class="y" id="demo">🎲 Demo भोट भर्नुहोस्</button>
+<button class="r" id="reset">🗑 Reset (0)</button>
+</div>
+<div class="hint">💡 <b>OBS मा live देखाउने तरिका:</b> 1) यो पेजमा भोट हालेर <b>Save</b> गर्नुहोस् → 2) <b>Export votes.json</b> गरेर यही folder मा replace गर्नुहोस् (वा एउटै Chrome मा display + admin खोलेर राख्नुहोस् – auto sync हुन्छ) → 3) OBS → Sources + → Browser → URL = <code>file:///D:/Nepali Congress/voting-result/index.html?obs=1</code> → Width 1920 Height 1080 → OK. अर्को विकल्प: <code>npx serve .</code> गरेर <code>http://localhost:3000/index.html?obs=1</code> प्रयोग गर्नुहोस्।</div>
+</div>
+
+<div class="card">
+<div class="row"><b id="title">—</b><span id="count" style="margin-left:auto;font-size:13px;color:#666"></span></div>
+<table><thead><tr><th>फोटो</th><th>ब्यालट</th><th>नाम</th><th>भोट</th><th>Quick +</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
+</div>
+
+<script>
+let votes={};
+try{votes=JSON.parse(localStorage.getItem('nc_votes')||'{}')}catch(e){votes={}}
+const cats=[...new Set(CANDIDATES.map(c=>c.cat))];
+const sel=document.getElementById('cat');
+sel.innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c}</option>`).join('');
+let qi=0,q='';
+function render(){
+  const cat=cats[qi];
+  const list=CANDIDATES.filter(c=>c.cat===cat && (!q || c.name.includes(q)));
+  document.getElementById('title').textContent=(qi+1)+'. '+cat+' — '+CANDIDATES.find(c=>c.cat===cat).seats+' पद';
+  document.getElementById('count').textContent=list.length+' जना';
+  document.getElementById('tb').innerHTML=list.map(c=>`<tr>
+    <td>${c.photo?`<img loading="lazy" src="${c.photo}" onerror="this.remove()">`:'—'}</td>
+    <td><b>${c.ballot}</b></td>
+    <td><b>${c.name}</b><br><small style="color:#667">${c.id} ${c.unopposed?'• निर्विरोध':''}</small></td>
+    <td><input class="vote" data-id="${c.id}" type="number" min="0" value="${votes[c.id]||0}"></td>
+    <td class="quick"><button data-a="10" data-id="${c.id}">+10</button><button data-a="50" data-id="${c.id}">+50</button><button data-a="100" data-id="${c.id}">+100</button></td>
+  </tr>`).join('');
+  document.querySelectorAll('input.vote').forEach(i=>i.onchange=()=>{votes[i.dataset.id]=parseInt(i.value||'0',10);});
+  document.querySelectorAll('.quick button').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id; votes[id]=(votes[id]||0)+parseInt(b.dataset.a,10);
+    document.querySelector(`input[data-id="${id}"]`).value=votes[id];
+  });
+}
+sel.onchange=e=>{qi=parseInt(e.target.value,10);render();};
+document.getElementById('q').oninput=e=>{q=e.target.value.trim();render();};
+document.getElementById('save').onclick=()=>{localStorage.setItem('nc_votes',JSON.stringify(votes));alert('Saved! Display page auto-updates (same browser). OBS को लागि Export गरेर votes.json replace गर्नुहोस्।');};
+document.getElementById('open').onclick=()=>window.open('index.html','_blank');
+document.getElementById('export').onclick=()=>{
+  const blob=new Blob([JSON.stringify(votes,null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='votes.json';a.click();
+};
+document.getElementById('importBtn').onclick=()=>document.getElementById('import').click();
+document.getElementById('import').onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader(); r.onload=()=>{try{votes=JSON.parse(r.result);localStorage.setItem('nc_votes',JSON.stringify(votes));render();alert('Imported!');}catch(err){alert('Invalid JSON');}}; r.readAsText(f);
+};
+document.getElementById('demo').onclick=()=>{
+  const cat=cats[qi];
+  CANDIDATES.filter(c=>c.cat===cat).forEach(c=>{votes[c.id]=Math.floor(Math.random()*1500)+50;});
+  localStorage.setItem('nc_votes',JSON.stringify(votes));render();alert('Demo votes filled for this category!');
+};
+document.getElementById('reset').onclick=()=>{if(confirm('सबै भोट 0 गर्ने?')){votes={};localStorage.setItem('nc_votes','{}');render();}};
+render();
+</script>
+</body>
+</html>
