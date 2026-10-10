@@ -205,6 +205,7 @@ let pages=[];
 function buildPages(){
   pages=[];
   cats.forEach((c,ci)=>{
+    if(!c.cands.some(x=>(votes[x.id]||0)>0||isWon(x)))return; // only data show — skip empty
     let arr=[...c.cands].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));
     const tp=Math.max(1,Math.ceil(arr.length/PER));
     for(let p=0;p<tp;p++)pages.push({catIdx:ci,page:p,totalPages:tp,list:arr.slice(p*PER,(p+1)*PER),cat:c.cat,seats:c.seats,full:arr});
@@ -228,6 +229,14 @@ const initials=n=>(n||'?').trim().charAt(0);
 const isWon=x=>!!x.unopposed||(votes.WINNERS||[]).includes(x.id);
 const wonLabel=x=>x.unopposed?'निर्विरोध निर्वाचित':'निर्वाचित';
 function render(){
+  if(!pages.length){
+    $('catOver').textContent='LIVE';$('catTitle').textContent='मतगणना बाँकी…';
+    $('seatPill').textContent='—';$('candPill').textContent='—';$('votePill').textContent='—';
+    $('slideNo').textContent='0 / '+cats.length;$('pageInfo').textContent='तथ्यांक आउँदैछ…';
+    const __l=$('list');__l.classList.remove('duel');
+    __l.innerHTML='<div class="row"><div class="nm"><b>तथ्यांक आउँदैछ, कृपया पर्खनुहोस्…</b></div></div>';
+    stopPetals();return;
+  }
   if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
   const pg=pages[pi],c=cats[pg.catIdx];
   const slideKey=pg.catIdx+'-'+pg.page;
@@ -249,22 +258,27 @@ function render(){
   $('slideNo').textContent=(pg.catIdx+1)+' / '+cats.length+(pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:'');
   $('pageInfo').textContent=`${pg.catIdx+1}/${cats.length}`+(pg.totalPages>1?` • ${pg.page+1}/${pg.totalPages}`:'')+` • ${total>0?`अग्रता: ${pg.full[0]?pg.full[0].name:'—'} (+${((pg.full[0]?(votes[pg.full[0].id]||0):0)-(pg.full[1]?(votes[pg.full[1].id]||0):0)).toLocaleString()})`:'मतगणना बाँकी'}`;
   const listEl=$('list');
-  if(c.cands.length<=2&&pg.totalPages===1){
+  const shownFull=pg.full.filter(x=>(votes[x.id]||0)>0||isWon(x));
+  if(!shownFull.length){
+    listEl.classList.remove('duel');
+    listEl.innerHTML='<div class="row"><div class="nm"><b>यस समूहको मतगणना बाँकी…</b></div></div>';
+  }else if(c.cands.length<=2&&pg.totalPages===1){
     listEl.classList.add('duel');
-    const mx=Math.max(1,...pg.full.map(x=>votes[x.id]||0));
+    const mx=Math.max(1,...shownFull.map(x=>votes[x.id]||0));
     const card=(x,i)=>{const v=votes[x.id]||0,pct=Math.round(v/mx*100);
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
       return `<div class="duelCard" style="--d:${i*140}ms">${ph}<h3>${x.name}${isWon(x)?' 🏆':''}</h3>
       <div class="vv" data-vid="${x.id}" data-v="${v}">0</div>${isWon(x)?`<div class="pp">🎉 ${wonLabel(x)}</div>`:''}
       <div class="dbar"><i style="--w:${isWon(x)?100:pct}%"></i></div></div>`;};
-    listEl.innerHTML=`<div class="duelRow">`+card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')+`</div>`;
+    listEl.innerHTML=`<div class="duelRow">`+card(shownFull[0],0)+(shownFull[1]?`<div id="vsBadge">VS</div>`+card(shownFull[1],1):'')+`</div>`;
   }else{
     listEl.classList.remove('duel');
-    const mx=Math.max(1,...pg.list.map(x=>votes[x.id]||0));
+    const shown=pg.list.filter(x=>(votes[x.id]||0)>0||isWon(x));
+    const mx=Math.max(1,...shown.map(x=>votes[x.id]||0));
     const rankOf=id=>pg.full.findIndex(x=>x.id===id)+1;
     const prev=lastOrder[pg.catIdx]||[];
     const lv=pg.full[0]?(votes[pg.full[0].id]||0):0, sv=pg.full[1]?(votes[pg.full[1].id]||0):0, mg=lv-sv;
-    listEl.innerHTML=pg.list.map((x,i)=>{
+    listEl.innerHTML=shown.map((x,i)=>{
       const v=votes[x.id]||0,pct=Math.round(v/mx*100),r=rankOf(x.id);
       const won=isWon(x);
       let mv='';
@@ -286,7 +300,7 @@ function render(){
     countUp(b,from,to);lastVotes[id]=to;
   });
   lastSlideKey=slideKey;
-  if(total>0)lastOrder[pg.catIdx]=pg.full.map(x=>x.id);
+  if(total>0)lastOrder[pg.catIdx]=shownFull.map(x=>x.id);
   const hot=[...cats].map(cc=>({cc,t:cc.cands.reduce((a,x)=>a+(votes[x.id]||0),0)}))
     .filter(o=>o.t>0).sort((a,b)=>b.t-a.t).slice(0,3)
     .map(o=>{const f=[...o.cc.cands].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));return `${o.cc.cat.split('(')[0].trim()}: ${f[0].name} ${votes[f[0].id].toLocaleString()} 🥇`;}).join(' • ');
