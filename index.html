@@ -173,7 +173,7 @@ body.bigtext .duelCard img,body.bigtext .duelCard .av{width:260px;height:260px}
     <a href="admin.html" target="_blank" class="hideobs" style="color:#f5b301;font-size:18px;font-weight:800;text-decoration:none">⚙ Admin</a>
   </div>
   <div id="petals"></div>
-  <div id="celebrate"><div class="tro">🏆</div><div class="w1">★ विजयी घोषणा ★</div><div id="celPh"></div><div class="wn" id="celName">—</div><div class="wc" id="celCat">—</div><div class="wt">🎉 निर्विरोध निर्वाचित 🎉</div></div>
+  <div id="celebrate"><div class="tro">🏆</div><div class="w1">★ विजयी घोषणा ★</div><div id="celPh"></div><div class="wn" id="celName">—</div><div class="wc" id="celCat">—</div><div class="wt" id="celWt">🎉 निर्विरोध निर्वाचित 🎉</div></div>
 </div></div>
 
 <script>
@@ -225,6 +225,8 @@ function countUp(elm,from,to){
 }
 function renderSel(){$('catSel').innerHTML=cats.map((c,i)=>`<option value="${i}">${i+1}. ${c.cat} (${c.cands.length})</option>`).join('');}
 const initials=n=>(n||'?').trim().charAt(0);
+const isWon=x=>!!x.unopposed||(votes.WINNERS||[]).includes(x.id);
+const wonLabel=x=>x.unopposed?'निर्विरोध निर्वाचित':'निर्वाचित';
 function render(){
   if(pi<0)pi=pages.length-1;if(pi>=pages.length)pi=0;
   const pg=pages[pi],c=cats[pg.catIdx];
@@ -232,7 +234,7 @@ function render(){
   $('catSel').value=pg.catIdx;
   const ct=$('catTitle');ct.style.animation='none';void ct.offsetWidth;ct.style.animation='';
   const cu=$('catU');cu.style.animation='none';void cu.offsetWidth;cu.style.animation='';
-  $('catOver').textContent=`पद-समूह ${pg.catIdx+1} / ${cats.length}${pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:''}${c.cands.some(x=>x.unopposed)?' 🏆':''}`;
+  $('catOver').textContent=`पद-समूह ${pg.catIdx+1} / ${cats.length}${pg.totalPages>1?` • पेज ${pg.page+1}/${pg.totalPages}`:''}${c.cands.some(isWon)?' 🏆':''}`;
   ct.textContent=(pg.catIdx+1)+'. '+pg.cat;
   $('seatPill').textContent=pg.seats+' पद';
   $('candPill').textContent=c.cands.length+' उम्मेदवार';
@@ -252,9 +254,9 @@ function render(){
     const mx=Math.max(1,...pg.full.map(x=>votes[x.id]||0));
     const card=(x,i)=>{const v=votes[x.id]||0,pct=Math.round(v/mx*100);
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
-      return `<div class="duelCard" style="--d:${i*140}ms">${ph}<h3>${x.name}${x.unopposed?' 🏆':''}</h3>
-      <div class="vv" data-vid="${x.id}" data-v="${v}">0</div>${x.unopposed?'<div class="pp">🎉 विजयी</div>':''}
-      <div class="dbar"><i style="--w:${x.unopposed?100:pct}%"></i></div></div>`;};
+      return `<div class="duelCard" style="--d:${i*140}ms">${ph}<h3>${x.name}${isWon(x)?' 🏆':''}</h3>
+      <div class="vv" data-vid="${x.id}" data-v="${v}">0</div>${isWon(x)?`<div class="pp">🎉 ${wonLabel(x)}</div>`:''}
+      <div class="dbar"><i style="--w:${isWon(x)?100:pct}%"></i></div></div>`;};
     listEl.innerHTML=`<div class="duelRow">`+card(pg.full[0],0)+(pg.full[1]?`<div id="vsBadge">VS</div>`+card(pg.full[1],1):'')+`</div>`;
   }else{
     listEl.classList.remove('duel');
@@ -264,17 +266,17 @@ function render(){
     const lv=pg.full[0]?(votes[pg.full[0].id]||0):0, sv=pg.full[1]?(votes[pg.full[1].id]||0):0, mg=lv-sv;
     listEl.innerHTML=pg.list.map((x,i)=>{
       const v=votes[x.id]||0,pct=Math.round(v/mx*100),r=rankOf(x.id);
-      const won=!!x.unopposed;
+      const won=isWon(x);
       let mv='';
       if(total>0&&prev.length){const o=prev.indexOf(x.id);
         if(o===-1||o===r-1)mv='<span class="mv same">•</span>';
         else if(o>r-1)mv=`<span class="mv up">▲${o-(r-1)}</span>`;
         else mv=`<span class="mv dn">▼${(r-1)-o}</span>`;}
       const ph=x.photo?`<img loading="lazy" src="${x.photo}" onerror="this.outerHTML='<div class=av>${initials(x.name)}</div>'">`:`<div class="av">${initials(x.name)}</div>`;
-      const vt=won?`<div class="vt"><b>🏆</b><br><span>विजयी • निर्विरोध</span></div>`
+      const vt=won?`<div class="vt"><b>🏆</b><br><span>${x.unopposed?'विजयी • निर्विरोध':'निर्वाचित 🎉'}</span></div>`
         :`<div class="vt"><b data-vid="${x.id}" data-v="${v}">0</b></div>`;
       return `<div class="row ${won?'won':''}" style="--d:${i*85}ms"><div class="rank">${won?'🏆':r}</div>${ph}
-      <div class="nm"><b>${x.name}${mv}${(total>0&&r===1&&!won)?`<span class="winTag">अग्रता +${mg.toLocaleString()}</span>`:''}${won?'<span class="winTag big">🎉 विजयी • निर्विरोध निर्वाचित</span>':''}</b></div>
+      <div class="nm"><b>${x.name}${mv}${(total>0&&r===1&&!won)?`<span class="winTag">अग्रता +${mg.toLocaleString()}</span>`:''}${won?`<span class="winTag big">🎉 ${wonLabel(x)}</span>`:''}</b></div>
       ${vt}<div class="bar"><i style="--w:${won?100:pct}%"></i></div></div>`;
     }).join('');
   }
@@ -289,8 +291,8 @@ function render(){
     .filter(o=>o.t>0).sort((a,b)=>b.t-a.t).slice(0,3)
     .map(o=>{const f=[...o.cc.cands].sort((a,b)=>(votes[b.id]||0)-(votes[a.id]||0));return `${o.cc.cat.split('(')[0].trim()}: ${f[0].name} ${votes[f[0].id].toLocaleString()} 🥇`;}).join(' • ');
   $('tickTxt').textContent=`🌳 नेपाली कांग्रेस १५औं महाधिवेशन • निर्वाचन समिति: ${DELEGATES.toLocaleString()} प्रतिनिधिमध्ये ${VOTES_CAST.toLocaleString()} मत (${TURNOUT_PCT}% मतदान)${hot?' • 🔥 '+hot:''} • `;
-  if(pg.list.some(x=>x.unopposed))startPetals();else stopPetals();
-  if(slideKey!==lastCelebKey){lastCelebKey=slideKey;const w=pg.list.find(x=>x.unopposed);if(w)celebrate(w,pg.cat);}
+  if(pg.list.some(isWon))startPetals();else stopPetals();
+  if(slideKey!==lastCelebKey){lastCelebKey=slideKey;const w=pg.list.find(isWon);if(w)celebrate(w,pg.cat);}
 }
 let petalTimer=null;
 function stopPetals(){if(petalTimer){clearInterval(petalTimer);petalTimer=null;}const b=$('petals');if(b)b.innerHTML='';}
@@ -313,6 +315,7 @@ function celebrate(w,cat){
   hideCeleb(true);
   $('celPh').innerHTML=w.photo?`<img src="${w.photo}" onerror="this.outerHTML='<div class=av>${initials(w.name)}</div>'">`:`<div class="av">${initials(w.name)}</div>`;
   $('celName').textContent=w.name;
+  $('celWt').textContent=w.unopposed?'🎉 निर्विरोध निर्वाचित 🎉':'🎉 निर्वाचित 🎉';
   $('celCat').textContent=cat;
   $('celebrate').classList.add('show');
   startPetals();
